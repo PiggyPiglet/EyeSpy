@@ -71,7 +71,9 @@ public class EyeSpyHud extends CustomUIHud {
     @Override
     protected void build(@Nonnull UICommandBuilder commandBuilder) {
         commandBuilder.append("Hud/Test.ui");
-        commandBuilder.set("#MyLabel.Text", this.labelText);
+        if(this.labelText !=null) {
+            commandBuilder.set("#MyLabel.Text", this.labelText);
+        }
     }
 
     @Override

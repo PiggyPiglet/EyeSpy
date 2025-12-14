@@ -5,19 +5,26 @@ Group {
   Group #TimeLeft {
     Anchor: (Top: 20);
     Padding: (Horizontal: 20, Vertical: 10);
-    LayoutMode: Top;
+    LayoutMode: Left;
 
-    Label #Header {
-      Style: LabelStyle(FontSize: 16); // or just Style: (FontSize: 16), type can be inferred.
-      Text: "Error: No header!";
+    ItemIcon #Icon {
+        Anchor: (Top: 20, Width: 64, Height: 64);
     }
-    Label #Body {
-      Style: LabelStyle(FontSize: 16); // or just Style: (FontSize: 16), type can be inferred.
-      Text: "Error: No body!";
-    }
-    Label #Footer {
-      Style: LabelStyle(FontSize: 16); // or just Style: (FontSize: 16), type can be inferred.
-      Text: "Error: No footer!";
+    Group {
+        Anchor: (Left: 10, Top: 20);
+        LayoutMode: Top;
+        Label #Header {
+          Style: LabelStyle(FontSize: 16); // or just Style: (FontSize: 16), type can be inferred.
+          Text: "Error: No header!";
+        }
+        Label #Body {
+          Style: LabelStyle(FontSize: 16); // or just Style: (FontSize: 16), type can be inferred.
+          Text: "Error: No body!";
+        }
+        Label #Footer {
+          Style: LabelStyle(FontSize: 16); // or just Style: (FontSize: 16), type can be inferred.
+          Text: "Error: No footer!";
+        }
     }
   }
   Label {FlexWeight: 1;}

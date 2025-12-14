@@ -16,16 +16,19 @@ import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.npc.sensorinfo.CachedPositionProvider;
 import com.jarhax.eyespy.api.context.BlockContext;
 import org.bson.BsonDocument;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EyeSpyHud extends CustomUIHud {
 
     private Message header;
     private String body;
     private String footer;
+    private String icon;
 
     public EyeSpyHud(@Nonnull PlayerRef playerRef) {
         super(playerRef);
@@ -36,6 +39,7 @@ public class EyeSpyHud extends CustomUIHud {
         this.header = null;
         this.body = null;
         this.footer = null;
+        this.icon = null;
 
         final Holder<EntityStore> holder = EntityUtils.toHolder(index, archetypeChunk);
         final Player player = holder.getComponent(Player.getComponentType());
@@ -44,22 +48,24 @@ public class EyeSpyHud extends CustomUIHud {
             if (blockContext != null) {
                 // TODO generate
                 header = getDisplayName(blockContext.getBlock());
-                body = "Hi!";
                 if (blockContext.getState() instanceof BenchState bench) {
                     body = "Tier: " + bench.getTierLevel();
                 }
                 footer = blockContext.getBlock().getId();
+                icon = blockContext.getBlock().getId();
             }
         }
     }
 
     @Override
     protected void build(@Nonnull UICommandBuilder commandBuilder) {
-        if (isValid(header) && this.body != null && this.footer != null) {
+        if (isValid(header) && this.icon != null) {
             commandBuilder.append("Hud/Test.ui");
             commandBuilder.set("#Header.Text", this.header);
-            commandBuilder.set("#Body.Text", this.body);
-            commandBuilder.set("#Footer.Text", this.footer);
+            setText(commandBuilder, "#Body", this.body);
+            setText(commandBuilder, "#Footer", this.footer);
+            setText(commandBuilder,"#Footer", this.footer);
+            commandBuilder.set("#Icon.ItemId", this.icon);
         }
     }
 
@@ -76,6 +82,15 @@ public class EyeSpyHud extends CustomUIHud {
 
         }
         return false;
+    }
+
+    private void setText(@Nonnull UICommandBuilder commandBuilder, @Nonnull String selector, @Nullable String value) {
+        if(value == null) {
+            commandBuilder.set(selector + ".Visible", false);
+        } else {
+            commandBuilder.set(selector + ".Visible", true);
+            commandBuilder.set(selector + ".Text", value);
+        }
     }
 
     private static Message getDisplayName(BlockType type) {

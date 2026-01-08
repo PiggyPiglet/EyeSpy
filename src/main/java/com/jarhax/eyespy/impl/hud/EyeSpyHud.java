@@ -57,7 +57,7 @@ public class EyeSpyHud extends CustomUIHud {
 
     @Override
     protected void build(@Nonnull UICommandBuilder ui) {
-        if (this.info != null) {
+        if (this.info != null && this.info.canDisplay()) {
             ui.append("Hud/EyeSpy.ui");
             setText(ui, "#Header", this.info.getHeader());
             setText(ui, "#Body", this.info.getBody());

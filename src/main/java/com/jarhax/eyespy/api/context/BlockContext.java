@@ -4,6 +4,7 @@ import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -55,18 +56,10 @@ public class BlockContext extends Context {
             if (chunk != null) {
                 final Vector3i targetBlockPos = TargetUtil.getTargetBlock(archetypeChunk.getReferenceTo(index), 5, commandBuffer);
                 if (targetBlockPos != null) {
-                    final Vector3i offsetBlockPos = targetBlockPos.clone();
-                    final int blockTypeId = chunk.getBlock(targetBlockPos);
-                    // TODO should we offset this by filler?
-                    final BlockType block = BlockType.getAssetMap().getAsset(blockTypeId);
-                    if (block != null) {
-                        int packedFiller = chunk.getFiller(targetBlockPos.getX(), targetBlockPos.getY(), targetBlockPos.getZ());
-                        if (packedFiller != 0) {
-                            offsetBlockPos.subtract(FillerBlockUtil.unpackX(packedFiller), FillerBlockUtil.unpackY(packedFiller), FillerBlockUtil.unpackZ(packedFiller));
-                        }
-                        final BlockState state = chunk.getState(offsetBlockPos.x, offsetBlockPos.y, offsetBlockPos.z);
-                        return new BlockContext(dt, index, archetypeChunk, store, commandBuffer, player, chunk, targetBlockPos, offsetBlockPos, block, state);
-                    }
+                    final BlockPosition pos = player.getWorld().getBaseBlock(new BlockPosition(targetBlockPos.x, targetBlockPos.y, targetBlockPos.z));
+                    final BlockType block = chunk.getBlockType(pos.x, pos.y, pos.z);
+                    final BlockState state = chunk.getState(pos.x, pos.y, pos.z);
+                    return new BlockContext(dt, index, archetypeChunk, store, commandBuffer, player, chunk, targetBlockPos, new Vector3i(pos.x, pos.y, pos.z), block, state);
                 }
             }
         }

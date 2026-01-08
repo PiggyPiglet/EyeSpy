@@ -1,16 +1,19 @@
 {
     "Group": "JarHax",
     "Name": "EyeSpy",
-    "Version": "2026.1.8-1537",
+    "Version": "2026.1.8-16784",
     "Description": "",
     "Authors": [
         {
             "Name": "Jaredlll08",
-            "Email": "jluboff8@gmail.com",
             "Url": "https://blamejared.com"
+        },
+        {
+            "Name": "Darkhax",
+            "Url": "https://darkhax.net"
         }
     ],
-    "Website": "https://blamejared.com",
+    "Website": "https://www.curseforge.com/hytale/mods/eyespy",
     "ServerVersion": "*",
     "Dependencies": {
         "Hytale:EntityModule": "*",

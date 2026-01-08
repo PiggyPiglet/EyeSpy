@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerTickSystem extends EntityTickingSystem<EntityStore> {
+
     @Nonnull
     private final Query<EntityStore> query;
 
@@ -26,28 +27,23 @@ public class PlayerTickSystem extends EntityTickingSystem<EntityStore> {
     }
 
     @Override
-    public void tick(float dt,
-                     int index,
-                     @Nonnull ArchetypeChunk<EntityStore> archetypeChunk,
-                     @Nonnull Store<EntityStore> store,
-                     @Nonnull CommandBuffer<EntityStore> commandBuffer) {
-
-        Player player = EntityUtils.toHolder(index, archetypeChunk).getComponent(Player.getComponentType());
-        PlayerRef playerRef = player.getPlayerRef();
-
+    public void tick(float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
+        final Player player = EntityUtils.toHolder(index, archetypeChunk).getComponent(Player.getComponentType());
+        final PlayerRef playerRef = player.getPlayerRef();
         if (!huds.containsKey(playerRef)) {
             EyeSpyHud value = new EyeSpyHud(playerRef);
             huds.put(playerRef, value);
             value.updateHud(dt, index, archetypeChunk, store, commandBuffer);
             player.getHudManager().setCustomHud(playerRef, value);
-        } else {
+        }
+        else {
             EyeSpyHud customUIHud = huds.get(playerRef);
             customUIHud.updateHud(dt, index, archetypeChunk, store, commandBuffer);
             customUIHud.show();
         }
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public Query<EntityStore> getQuery() {
         return query;

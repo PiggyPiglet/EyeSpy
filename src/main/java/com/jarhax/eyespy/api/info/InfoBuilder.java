@@ -40,4 +40,8 @@ public class InfoBuilder {
     public void setFooter(Message footer) {
         this.footer = footer;
     }
+
+    public boolean canDisplay() {
+        return this.getIcon() != null || this.getHeader() != null || this.getBody() != null || this.getFooter() != null;
+    }
 }

@@ -1,6 +1,7 @@
 package com.jarhax.eyespy.impl.info;
 
 import com.hypixel.hytale.builtin.crafting.state.BenchState;
+import com.hypixel.hytale.builtin.crafting.state.ProcessingBenchState;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.farming.FarmingData;
@@ -41,6 +42,12 @@ public class VanillaBlockInfoProvider implements InfoProvider<BlockContext> {
 
             if (context.getState() instanceof ItemContainerState container) {
                 infoBuilder.setBody(MessageHelpers.capacity(container.getItemContainer().getCapacity()).color(color2));
+            }
+
+            if (context.getState() instanceof ProcessingBenchState processor) {
+                if (processor.isActive() && processor.getRecipe() != null) {
+                    infoBuilder.setBody(MessageHelpers.progress((processor.getInputProgress() / processor.getRecipe().getTimeSeconds()) * 100f).color(color2));
+                }
             }
         }
     }

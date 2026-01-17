@@ -4,8 +4,11 @@ import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
@@ -16,7 +19,7 @@ public class EntityContext extends Context {
 
     private final Ref<EntityStore> entity;
 
-    public EntityContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, Player observer, WorldChunk chunk, Ref<EntityStore> entity) {
+    public EntityContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, Ref<EntityStore> entity) {
         super(delta, index, archetypeChunk, store, commandBuffer, observer, chunk);
         this.entity = entity;
     }
@@ -26,12 +29,26 @@ public class EntityContext extends Context {
     }
 
     @Nullable
-    public static EntityContext create(Player player, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer) {
-
+    public static EntityContext create(PlayerRef player, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer) {
+        Ref<EntityStore> playerRef = player.getReference();
+        if (playerRef == null) {
+            return null;
+        }
+        Store<EntityStore> playerStore = playerRef.getStore();
+        World world = store.getExternalData().getWorld();
         final Ref<EntityStore> targetEntity = TargetUtil.getTargetEntity(archetypeChunk.getReferenceTo(index), commandBuffer);
-        final TransformComponent transform = archetypeChunk.getComponent(index, TransformComponent.getComponentType());
-        if (transform != null && targetEntity != null) {
-            final WorldChunk chunk = transform.getChunk();
+        TransformComponent transform = playerStore.getComponent(playerRef, TransformComponent.getComponentType());
+
+        if (transform == null) {
+            return null;
+        }
+        Vector3d position = transform.getPosition();
+
+        if (targetEntity != null) {
+            int X = (int) Math.floor(position.x);
+            int Z = (int) Math.floor(position.z);
+            long chunkIndex = ChunkUtil.indexChunkFromBlock(X, Z);
+            WorldChunk chunk = world.getChunkIfLoaded(chunkIndex);
             return new EntityContext(dt, index, archetypeChunk, store, commandBuffer, player, chunk, targetEntity);
         }
 

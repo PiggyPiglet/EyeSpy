@@ -3,7 +3,7 @@ package com.jarhax.eyespy.api.context;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -15,10 +15,10 @@ public class Context {
     private final Store<EntityStore> store;
     private final CommandBuffer<EntityStore> commandBuffer;
 
-    private final Player observer;
+    private final PlayerRef observer;
     private final WorldChunk chunk;
 
-    public Context(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, Player observer, WorldChunk chunk) {
+    public Context(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk) {
         this.delta = delta;
         this.index = index;
         this.archetypeChunk = archetypeChunk;
@@ -44,7 +44,7 @@ public class Context {
         return store;
     }
 
-    public Player getObserver() {
+    public PlayerRef getObserver() {
         return observer;
     }
 
@@ -52,7 +52,7 @@ public class Context {
         return commandBuffer;
     }
 
-    public Player observer() {
+    public PlayerRef observer() {
         return this.observer;
     }
 

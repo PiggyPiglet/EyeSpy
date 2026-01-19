@@ -1,14 +1,11 @@
 package com.jarhax.eyespy.impl.hud;
 
-import com.hypixel.hytale.component.ArchetypeChunk;
-import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.Holder;
-import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.server.core.entity.EntityUtils;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.jarhax.eyespy.api.context.BlockContext;
 import com.jarhax.eyespy.api.context.EntityContext;
@@ -50,17 +47,17 @@ public class EyeSpyHud extends CustomUIHud {
 
     public void updateHud(float dt, int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         this.info = new InfoBuilder();
-        final Holder<EntityStore> holder = EntityUtils.toHolder(index, archetypeChunk);
-        final Player player = holder.getComponent(Player.getComponentType());
+        PlayerRef playerRef = archetypeChunk.getComponent(index, PlayerRef.getComponentType());
+        World world = store.getExternalData().getWorld();
 
-        if (player != null && player.getWorld() != null) {
-            this.entityContext = EntityContext.create(player, dt, index, archetypeChunk, store, commandBuffer);
+        if (playerRef != null && world != null) {
+            this.entityContext = EntityContext.create(playerRef, dt, index, archetypeChunk, store, commandBuffer);
             if (this.entityContext != null) {
                 for (InfoProvider<EntityContext> provider : entityInfoProviders) {
                     provider.updateDescription(this.entityContext, this.info);
                 }
             } else {
-                this.blockContext = BlockContext.create(player, dt, index, archetypeChunk, store, commandBuffer);
+                this.blockContext = BlockContext.create(playerRef, dt, index, archetypeChunk, store, commandBuffer);
                 if (this.blockContext != null) {
                     for (InfoProvider<BlockContext> provider : blockInfoProviders) {
                         provider.updateDescription(this.blockContext, this.info);

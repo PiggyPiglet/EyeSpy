@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.jarhax.eyespy.api.EyeSpyConfig;
 
 public class Context {
 
@@ -17,8 +18,9 @@ public class Context {
 
     private final PlayerRef observer;
     private final WorldChunk chunk;
+    private final EyeSpyConfig config;
 
-    public Context(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk) {
+    public Context(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config) {
         this.delta = delta;
         this.index = index;
         this.archetypeChunk = archetypeChunk;
@@ -26,6 +28,7 @@ public class Context {
         this.commandBuffer = commandBuffer;
         this.observer = observer;
         this.chunk = chunk;
+        this.config = config;
     }
 
     public float getDelta() {
@@ -58,5 +61,9 @@ public class Context {
 
     public WorldChunk getChunk() {
         return chunk;
+    }
+
+    public EyeSpyConfig getConfig() {
+        return config;
     }
 }

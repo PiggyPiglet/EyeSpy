@@ -21,12 +21,12 @@ public class ProgressBarValue implements InfoValue {
         ui.appendInline(selector, """
                 Group {
                   Anchor: (Height: 12);
-                  Background: "Hud/EyeSpy/ProcessingBar.png";
+                  Background: "EyeSpy/Hud/ProcessingBar.png";
                 
                   ProgressBar #%s {
                     Value: %s;
-                    BarTexturePath: "Hud/EyeSpy/ProcessingBarFill.png";
-                    EffectTexturePath: "Hud/EyeSpy/ProcessingBarEffect.png";
+                    BarTexturePath: "EyeSpy/Hud/ProcessingBarFill.png";
+                    EffectTexturePath: "EyeSpy/Hud/ProcessingBarEffect.png";
                     EffectWidth: 102;
                     EffectHeight: 58;
                     EffectOffset: 74;

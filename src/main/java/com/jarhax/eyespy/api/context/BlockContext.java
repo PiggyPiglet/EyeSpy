@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.universe.world.meta.BlockState;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import com.hypixel.hytale.server.core.util.TargetUtil;
-import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
+import com.jarhax.eyespy.api.EyeSpyConfig;
 
 import javax.annotation.Nullable;
 
@@ -26,8 +26,8 @@ public class BlockContext extends Context {
     private final Vector3i targetPos;
     private final Vector3i offsetPos;
 
-    public BlockContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, Vector3i targetPos, Vector3i offsetPos, BlockType block, BlockState state) {
-        super(delta, index, archetypeChunk, store, commandBuffer, observer, chunk);
+    public BlockContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config, Vector3i targetPos, Vector3i offsetPos, BlockType block, BlockState state) {
+        super(delta, index, archetypeChunk, store, commandBuffer, observer, chunk, config);
         this.targetPos = targetPos;
         this.offsetPos = offsetPos;
         this.block = block;
@@ -52,7 +52,7 @@ public class BlockContext extends Context {
     }
 
     @Nullable
-    public static BlockContext create(PlayerRef player, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer) {
+    public static BlockContext create(PlayerRef player, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, EyeSpyConfig config) {
         Ref<EntityStore> playerRef = player.getReference();
         if (playerRef == null) {
             return null;
@@ -84,7 +84,7 @@ public class BlockContext extends Context {
             BlockType block = baseChunk.getBlockType(basePos.x, basePos.y, basePos.z);
             BlockState state = baseChunk.getState(basePos.x, basePos.y, basePos.z);
 
-            return new BlockContext(dt, index, archetypeChunk, store, commandBuffer, player, baseChunk, targetBlockPos, basePos, block, state);
+            return new BlockContext(dt, index, archetypeChunk, store, commandBuffer, player, baseChunk, config, targetBlockPos, basePos, block, state);
         }
         return null;
     }

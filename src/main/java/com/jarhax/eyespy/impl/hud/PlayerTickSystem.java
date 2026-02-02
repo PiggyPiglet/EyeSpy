@@ -21,8 +21,6 @@ public class PlayerTickSystem extends EntityTickingSystem<EntityStore> {
     @Nonnull
     private final Query<EntityStore> query;
 
-    private final Map<PlayerRef, EyeSpyHud> huds = new HashMap<>();
-
     public PlayerTickSystem() {
         this.query = Query.and(Player.getComponentType());
     }
@@ -35,6 +33,7 @@ public class PlayerTickSystem extends EntityTickingSystem<EntityStore> {
         if (player == null || playerRef == null) {
             return;
         }
+
         EyeSpy.provider.showHud(dt, index, archetypeChunk, store, commandBuffer);
     }
 

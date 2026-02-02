@@ -1,9 +1,39 @@
 package com.jarhax.eyespy.api.info;
 
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
 
+import java.util.Objects;
+
 public class AnchorBuilder {
+
+    public static final BuilderCodec<AnchorBuilder> CODEC = BuilderCodec.builder(AnchorBuilder.class, AnchorBuilder::new)
+            .append(new KeyedCodec<>("Left", Codec.INTEGER), (p, t) -> p.left = t, p -> p.left)
+            .add()
+            .append(new KeyedCodec<>("Right", Codec.INTEGER), (p, t) -> p.right = t, p -> p.right)
+            .add()
+            .append(new KeyedCodec<>("Top", Codec.INTEGER), (p, t) -> p.top = t, p -> p.top)
+            .add()
+            .append(new KeyedCodec<>("Bottom", Codec.INTEGER), (p, t) -> p.bottom = t, p -> p.bottom)
+            .add()
+            .append(new KeyedCodec<>("Height", Codec.INTEGER), (p, t) -> p.height = t, p -> p.height)
+            .add()
+            .append(new KeyedCodec<>("Full", Codec.INTEGER), (p, t) -> p.full = t, p -> p.full)
+            .add()
+            .append(new KeyedCodec<>("Horizontal", Codec.INTEGER), (p, t) -> p.horizontal = t, p -> p.horizontal)
+            .add()
+            .append(new KeyedCodec<>("Vertical", Codec.INTEGER), (p, t) -> p.vertical = t, p -> p.vertical)
+            .add()
+            .append(new KeyedCodec<>("Width", Codec.INTEGER), (p, t) -> p.width = t, p -> p.width)
+            .add()
+            .append(new KeyedCodec<>("MinWidth", Codec.INTEGER), (p, t) -> p.minWidth = t, p -> p.minWidth)
+            .add()
+            .append(new KeyedCodec<>("MaxWidth", Codec.INTEGER), (p, t) -> p.maxWidth = t, p -> p.maxWidth)
+            .add()
+            .build();
 
     private Integer left = null;
     private Integer right = null;
@@ -85,6 +115,50 @@ public class AnchorBuilder {
         return this;
     }
 
+    public Integer left() {
+        return left;
+    }
+
+    public Integer right() {
+        return right;
+    }
+
+    public Integer top() {
+        return top;
+    }
+
+    public Integer bottom() {
+        return bottom;
+    }
+
+    public Integer height() {
+        return height;
+    }
+
+    public Integer full() {
+        return full;
+    }
+
+    public Integer horizontal() {
+        return horizontal;
+    }
+
+    public Integer vertical() {
+        return vertical;
+    }
+
+    public Integer width() {
+        return width;
+    }
+
+    public Integer minWidth() {
+        return minWidth;
+    }
+
+    public Integer maxWidth() {
+        return maxWidth;
+    }
+
     public Anchor build() {
         Anchor anchor = new Anchor();
         if (this.left != null) {
@@ -121,5 +195,59 @@ public class AnchorBuilder {
             anchor.setMaxWidth(Value.of(this.maxWidth));
         }
         return anchor;
+    }
+
+    public void clear() {
+        this.left = null;
+        this.right = null;
+        this.top = null;
+        this.bottom = null;
+        this.height = null;
+        this.full = null;
+        this.horizontal = null;
+        this.vertical = null;
+        this.width = null;
+        this.minWidth = null;
+        this.maxWidth = null;
+    }
+
+    @Override
+    public AnchorBuilder clone() {
+        AnchorBuilder anchorBuilder = new AnchorBuilder();
+        anchorBuilder.left = this.left;
+        anchorBuilder.right = this.right;
+        anchorBuilder.top = this.top;
+        anchorBuilder.bottom = this.bottom;
+        anchorBuilder.height = this.height;
+        anchorBuilder.full = this.full;
+        anchorBuilder.horizontal = this.horizontal;
+        anchorBuilder.vertical = this.vertical;
+        anchorBuilder.width = this.width;
+        anchorBuilder.minWidth = this.minWidth;
+        anchorBuilder.maxWidth = this.maxWidth;
+        return anchorBuilder;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof AnchorBuilder that)) return false;
+
+        return Objects.equals(left, that.left) && Objects.equals(right, that.right) && Objects.equals(top, that.top) && Objects.equals(bottom, that.bottom) && Objects.equals(height, that.height) && Objects.equals(full, that.full) && Objects.equals(horizontal, that.horizontal) && Objects.equals(vertical, that.vertical) && Objects.equals(width, that.width) && Objects.equals(minWidth, that.minWidth) && Objects.equals(maxWidth, that.maxWidth);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(left);
+        result = 31 * result + Objects.hashCode(right);
+        result = 31 * result + Objects.hashCode(top);
+        result = 31 * result + Objects.hashCode(bottom);
+        result = 31 * result + Objects.hashCode(height);
+        result = 31 * result + Objects.hashCode(full);
+        result = 31 * result + Objects.hashCode(horizontal);
+        result = 31 * result + Objects.hashCode(vertical);
+        result = 31 * result + Objects.hashCode(width);
+        result = 31 * result + Objects.hashCode(minWidth);
+        result = 31 * result + Objects.hashCode(maxWidth);
+        return result;
     }
 }

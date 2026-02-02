@@ -1,13 +1,19 @@
 package com.jarhax.eyespy.impl.info;
 
+import com.hypixel.hytale.builtin.adventure.teleporter.component.Teleporter;
 import com.hypixel.hytale.builtin.crafting.state.BenchState;
 import com.hypixel.hytale.builtin.crafting.state.ProcessingBenchState;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTranslationProperties;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
 import com.hypixel.hytale.server.core.universe.world.meta.state.ItemContainerState;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.jarhax.eyespy.EyeSpy;
 import com.jarhax.eyespy.api.MessageHelpers;
 import com.jarhax.eyespy.api.context.BlockContext;
@@ -35,12 +41,29 @@ public class VanillaBlockInfoProvider implements InfoProvider<BlockContext> {
                 infoBuilder.setIcon(new IconValue(item.getId()));
             }
 
+            BlockComponentChunk blockComponentChunk = context.getChunk().getBlockComponentChunk();
+            int blockIndex = ChunkUtil.indexBlockInColumn(context.getOffsetPos().x, context.getOffsetPos().y, context.getOffsetPos().z);
+            Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(blockIndex);
+            if (blockRef != null && blockRef.isValid()) {
+                World world = context.getStore().getExternalData().getWorld();
+                ChunkStore chunkStore = world.getChunkStore();
+
+                if (chunkStore.getStore().getComponent(blockRef, Teleporter.getComponentType()) instanceof Teleporter teleporter) {
+                    if (teleporter.getOwnedWarp() != null) {
+                        infoBuilder.set("TeleporterName", s -> new LabelValue(s, Message.raw("Name: " + teleporter.getOwnedWarp())));
+                    }
+                    if (teleporter.getWarp() != null) {
+                        infoBuilder.set("TeleporterDestination", s -> new LabelValue(s, Message.raw("Destination: " + teleporter.getWarp())));
+                    }
+                }
+            }
+
             if (context.getState() != null) {
                 infoBuilder.set("Body", s -> switch (context.getState()) {
                     case ProcessingBenchState processor -> {
                         List<InfoValue> values = new ArrayList<>();
                         values.add(new LabelValue(s + "Tier", MessageHelpers.tier(processor.getTierLevel()).color(color2)));
-                        if (processor.isActive() && processor.getRecipe() != null && !Float.isNaN(processor.getInputProgress()) && !Float.isNaN(processor.getRecipe().getTimeSeconds())) {
+                        if (context.getConfig().showProcessingTimes() && processor.isActive() && processor.getRecipe() != null && !Float.isNaN(processor.getInputProgress()) && !Float.isNaN(processor.getRecipe().getTimeSeconds())) {
                             float value = processor.getInputProgress() / processor.getRecipe().getTimeSeconds();
                             // If we don't drop tiny values the client crashes
                             values.add(new ProgressBarValue(s + "Progress", Math.round(value * 1000) / 1000f));
@@ -50,28 +73,31 @@ public class VanillaBlockInfoProvider implements InfoProvider<BlockContext> {
                     case BenchState bench -> new LabelValue(s, MessageHelpers.tier(bench.getTierLevel()).color(color2));
                     case ItemContainerState container -> {
 
-                        List<ItemStack> stacks = new ArrayList<>();
-                        outer:
-                        for (short i = 0; i < container.getItemContainer().getCapacity(); i++) {
-                            ItemStack stack = container.getItemContainer().getItemStack(i);
-                            if (stack == null) {
-                                continue;
-                            }
-                            for (int j = 0; j < stacks.size(); j++) {
-                                ItemStack itemStack = stacks.get(j);
-                                if (itemStack.isEquivalentType(stack)) {
-                                    stacks.set(j, itemStack.withQuantity(itemStack.getQuantity() + stack.getQuantity()));
-                                    continue outer;
+                        if (context.getConfig().showContainers()) {
+                            List<ItemStack> stacks = new ArrayList<>();
+                            outer:
+                            for (short i = 0; i < container.getItemContainer().getCapacity(); i++) {
+                                ItemStack stack = container.getItemContainer().getItemStack(i);
+                                if (stack == null) {
+                                    continue;
                                 }
-                            }
-                            // Crash workaround by setting Durability of broken items to 1.0 and removing any Metadata
-                            // TODO Find actual fix :)
-                            ItemStack safeStack = stack.withMetadata(null)
-                                    .withDurability(stack.getMaxDurability() > 0 ? Math.max(1.0, stack.getDurability()) : stack.getDurability());
+                                for (int j = 0; j < stacks.size(); j++) {
+                                    ItemStack itemStack = stacks.get(j);
+                                    if (itemStack.isEquivalentType(stack)) {
+                                        stacks.set(j, itemStack.withQuantity(itemStack.getQuantity() + stack.getQuantity()));
+                                        continue outer;
+                                    }
+                                }
+                                // Crash workaround by setting Durability of broken items to 1.0 and removing any Metadata
+                                // TODO Find actual fix :)
+                                ItemStack safeStack = stack.withMetadata(null)
+                                        .withDurability(stack.getMaxDurability() > 0 ? Math.max(1.0, stack.getDurability()) : stack.getDurability());
 
-                            stacks.add(safeStack);
+                                stacks.add(safeStack);
+                            }
+                            yield new ItemGridValue(s, stacks);
                         }
-                        yield new ItemGridValue(s, stacks);
+                        yield InfoValue.EMPTY;
                     }
                     default -> InfoValue.EMPTY;
                 });

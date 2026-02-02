@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.jarhax.eyespy.api.EyeSpyConfig;
 
 import javax.annotation.Nullable;
 
@@ -21,8 +22,8 @@ public class EntityContext extends Context {
 
     private final Ref<EntityStore> entity;
 
-    public EntityContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, Ref<EntityStore> entity) {
-        super(delta, index, archetypeChunk, store, commandBuffer, observer, chunk);
+    public EntityContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config, Ref<EntityStore> entity) {
+        super(delta, index, archetypeChunk, store, commandBuffer, observer, chunk, config);
         this.entity = entity;
     }
 
@@ -31,7 +32,7 @@ public class EntityContext extends Context {
     }
 
     @Nullable
-    public static EntityContext create(PlayerRef player, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer) {
+    public static EntityContext create(PlayerRef player, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, EyeSpyConfig config) {
         Ref<EntityStore> playerRef = player.getReference();
         if (playerRef == null) {
             return null;
@@ -54,7 +55,7 @@ public class EntityContext extends Context {
             int z = (int) Math.floor(position.z);
             long chunkIndex = ChunkUtil.indexChunkFromBlock(x, z);
             WorldChunk chunk = world.getChunkIfLoaded(chunkIndex);
-            return new EntityContext(dt, index, archetypeChunk, store, commandBuffer, player, chunk, targetEntity);
+            return new EntityContext(dt, index, archetypeChunk, store, commandBuffer, player, chunk, config, targetEntity);
         }
 
         return null;

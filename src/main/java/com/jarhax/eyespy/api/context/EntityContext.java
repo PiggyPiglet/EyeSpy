@@ -18,8 +18,8 @@ public class EntityContext extends Context {
 
     private final Ref<EntityStore> entity;
 
-    public EntityContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, EyeSpyConfig config, Ref<EntityStore> entity) {
-        super(delta, index, archetypeChunk, store, commandBuffer, observer, config);
+    public EntityContext(float delta, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, EyeSpyConfig config, Ref<EntityStore> entity) {
+        super(delta, store, commandBuffer, observer, config);
         this.entity = entity;
     }
 
@@ -35,7 +35,7 @@ public class EntityContext extends Context {
             final Ref<EntityStore> targetEntity = TargetUtil.getTargetEntity(archetypeChunk.getReferenceTo(index), commandBuffer);
             final TransformComponent transform = playerStore.getComponent(playerRef, TransformComponent.getComponentType());
             if (transform != null && canDisplayEntity(store, targetEntity)) {
-                return new EntityContext(dt, index, archetypeChunk, store, commandBuffer, player, config, targetEntity);
+                return new EntityContext(dt, store, commandBuffer, player, config, targetEntity);
             }
         }
         return null;

@@ -27,8 +27,8 @@ public class BlockContext extends Context {
     private final Vector3i targetPos;
     private final Vector3i offsetPos;
 
-    public BlockContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config, Vector3i targetPos, Vector3i offsetPos, BlockType block, BlockState state) {
-        super(delta, index, archetypeChunk, store, commandBuffer, observer, config);
+    public BlockContext(float delta, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config, Vector3i targetPos, Vector3i offsetPos, BlockType block, BlockState state) {
+        super(delta, store, commandBuffer, observer, config);
         this.chunk = chunk;
         this.targetPos = targetPos;
         this.offsetPos = offsetPos;
@@ -75,7 +75,7 @@ public class BlockContext extends Context {
                     if (rootChunk != null) {
                         final BlockType block = rootChunk.getBlockType(rootPos.x, rootPos.y, rootPos.z);
                         final BlockState state = rootChunk.getState(rootPos.x, rootPos.y, rootPos.z);
-                        return new BlockContext(dt, index, archetypeChunk, store, commandBuffer, player, rootChunk, config, targetBlockPos, rootPos, block, state);
+                        return new BlockContext(dt, store, commandBuffer, player, rootChunk, config, targetBlockPos, rootPos, block, state);
                     }
                 }
             }

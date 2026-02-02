@@ -3,7 +3,11 @@ package com.jarhax.eyespy;
 import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
+import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Holder;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.asset.AssetModule;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -18,7 +22,7 @@ import com.jarhax.eyespy.api.hud.MultiHudProvider;
 import com.jarhax.eyespy.api.hud.VanillaHudProvider;
 import com.jarhax.eyespy.api.info.AnchorBuilder;
 import com.jarhax.eyespy.impl.command.ConfigCommand;
-import com.jarhax.eyespy.impl.component.EyeSpyComponent;
+import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import com.jarhax.eyespy.impl.hud.PlayerTickSystem;
 import com.jarhax.eyespy.impl.util.Reflect;
 
@@ -35,7 +39,7 @@ public class EyeSpy extends JavaPlugin {
 
     public static HudProvider provider = new VanillaHudProvider();
 
-    public static ComponentType<EntityStore, EyeSpyComponent> eyeSpyComponentType;
+    private static ComponentType<EntityStore, EyeSpyPlayerData> saveDataComponentType;
 
     public EyeSpy(@Nonnull JavaPluginInit init) {
         super(init);
@@ -46,7 +50,7 @@ public class EyeSpy extends JavaPlugin {
         super.setup();
         this.getEntityStoreRegistry().registerSystem(new PlayerTickSystem());
         this.getCommandRegistry().registerCommand(new ConfigCommand());
-        EyeSpy.eyeSpyComponentType = this.getEntityStoreRegistry().registerComponent(EyeSpyComponent.class, "EyeSpy", EyeSpyComponent.CODEC);
+        saveDataComponentType = this.getEntityStoreRegistry().registerComponent(EyeSpyPlayerData.class, "EyeSpy", EyeSpyPlayerData.CODEC);
     }
 
     @Override
@@ -72,4 +76,11 @@ public class EyeSpy extends JavaPlugin {
         Reflect.UICommandBuilder_.CODEC_MAP.get().put(LayoutMode.class, LayoutMode.CODEC);
     }
 
+    public static EyeSpyPlayerData getSaveData(Holder<EntityStore> holder) {
+        return holder.ensureAndGetComponent(saveDataComponentType);
+    }
+
+    public static EyeSpyPlayerData getSaveData(ComponentAccessor<EntityStore> buffer, Ref<EntityStore> ref) {
+        return buffer.ensureAndGetComponent(ref, saveDataComponentType);
+    }
 }

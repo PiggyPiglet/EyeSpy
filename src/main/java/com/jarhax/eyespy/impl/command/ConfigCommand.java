@@ -1,6 +1,5 @@
 package com.jarhax.eyespy.impl.command;
 
-import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.GameMode;
@@ -11,7 +10,6 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.jarhax.eyespy.impl.component.EyeSpyComponent;
 import com.jarhax.eyespy.impl.ui.ConfigUI;
 
 import javax.annotation.Nonnull;

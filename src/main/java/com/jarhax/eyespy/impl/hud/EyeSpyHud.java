@@ -1,12 +1,15 @@
 package com.jarhax.eyespy.impl.hud;
 
-import com.hypixel.hytale.component.*;
-import com.hypixel.hytale.server.core.entity.EntityUtils;
+import com.hypixel.hytale.component.ArchetypeChunk;
+import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.jarhax.eyespy.EyeSpy;
 import com.jarhax.eyespy.api.EyeSpyConfig;
 import com.jarhax.eyespy.api.context.BlockContext;
 import com.jarhax.eyespy.api.context.EntityContext;
@@ -14,7 +17,6 @@ import com.jarhax.eyespy.api.info.AnchorBuilder;
 import com.jarhax.eyespy.api.info.InfoBuilder;
 import com.jarhax.eyespy.api.info.InfoProvider;
 import com.jarhax.eyespy.api.info.InfoValue;
-import com.jarhax.eyespy.impl.component.EyeSpyComponent;
 import com.jarhax.eyespy.impl.info.VanillaBlockInfoProvider;
 import com.jarhax.eyespy.impl.info.VanillaEntityInfoProvider;
 
@@ -56,7 +58,7 @@ public class EyeSpyHud extends CustomUIHud {
         PlayerRef playerRef = archetypeChunk.getComponent(index, PlayerRef.getComponentType());
         World world = store.getExternalData().getWorld();
         Ref<EntityStore> referenceTo = archetypeChunk.getReferenceTo(index);
-        EyeSpyConfig config = commandBuffer.ensureAndGetComponent(referenceTo, EyeSpyComponent.getComponentType());
+        EyeSpyConfig config = EyeSpy.getSaveData(commandBuffer, referenceTo);
         if (playerRef != null && world != null) {
             this.config = config;
             this.entityContext = EntityContext.create(playerRef, dt, index, archetypeChunk, store, commandBuffer, config);
@@ -64,7 +66,8 @@ public class EyeSpyHud extends CustomUIHud {
                 for (InfoProvider<EntityContext> provider : entityInfoProviders) {
                     provider.updateDescription(this.entityContext, this.info);
                 }
-            } else {
+            }
+            else {
                 this.blockContext = BlockContext.create(playerRef, dt, index, archetypeChunk, store, commandBuffer, config);
                 if (this.blockContext != null) {
                     for (InfoProvider<BlockContext> provider : blockInfoProviders) {
@@ -94,7 +97,8 @@ public class EyeSpyHud extends CustomUIHud {
             for (InfoProvider<EntityContext> provider : entityInfoProviders) {
                 provider.modifyUI(this.entityContext, ui);
             }
-        } else if (this.blockContext != null) {
+        }
+        else if (this.blockContext != null) {
             for (InfoProvider<BlockContext> provider : blockInfoProviders) {
                 provider.modifyUI(this.blockContext, ui);
             }

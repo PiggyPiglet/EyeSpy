@@ -14,33 +14,28 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
 import javax.annotation.Nonnull;
 
-public class EyeSpyComponent implements Component<EntityStore>, EyeSpyConfig {
+public class EyeSpyPlayerData implements Component<EntityStore>, EyeSpyConfig {
 
-    public static final BuilderCodec<EyeSpyComponent> CODEC = BuilderCodec.builder(EyeSpyComponent.class, EyeSpyComponent::new)
-            .append(new KeyedCodec<>("Position", AnchorBuilder.CODEC), EyeSpyComponent::position, EyeSpyComponent::position)
+    public static final BuilderCodec<EyeSpyPlayerData> CODEC = BuilderCodec.builder(EyeSpyPlayerData.class, EyeSpyPlayerData::new)
+            .append(new KeyedCodec<>("Position", AnchorBuilder.CODEC), EyeSpyPlayerData::position, EyeSpyPlayerData::position)
             .documentation("The position of the hud on the screen")
             .add()
-            .append(new KeyedCodec<>("LayoutMode", LayoutMode.CODEC), EyeSpyComponent::layoutMode, EyeSpyComponent::layoutMode)
+            .append(new KeyedCodec<>("LayoutMode", LayoutMode.CODEC), EyeSpyPlayerData::layoutMode, EyeSpyPlayerData::layoutMode)
             .documentation("The layout of the hud")
             .add()
-            .append(new KeyedCodec<>("Visible", Codec.BOOLEAN), EyeSpyComponent::visible, EyeSpyComponent::visible)
+            .append(new KeyedCodec<>("Visible", Codec.BOOLEAN), EyeSpyPlayerData::visible, EyeSpyPlayerData::visible)
             .documentation("Is the hud visible")
             .add()
-            .append(new KeyedCodec<>("ShowInBackground", Codec.BOOLEAN), EyeSpyComponent::showInBackground, EyeSpyComponent::showInBackground)
+            .append(new KeyedCodec<>("ShowInBackground", Codec.BOOLEAN), EyeSpyPlayerData::showInBackground, EyeSpyPlayerData::showInBackground)
             .documentation("Should the hud be shown if the player has a page / container open")
             .add()
-            .append(new KeyedCodec<>("ShowContainers", Codec.BOOLEAN), EyeSpyComponent::showContainers, EyeSpyComponent::showContainers)
+            .append(new KeyedCodec<>("ShowContainers", Codec.BOOLEAN), EyeSpyPlayerData::showContainers, EyeSpyPlayerData::showContainers)
             .documentation("Should container contents be shown")
             .add()
-            .append(new KeyedCodec<>("ShowProcessingTimes", Codec.BOOLEAN), EyeSpyComponent::showProcessingTimes, EyeSpyComponent::showProcessingTimes)
+            .append(new KeyedCodec<>("ShowProcessingTimes", Codec.BOOLEAN), EyeSpyPlayerData::showProcessingTimes, EyeSpyPlayerData::showProcessingTimes)
             .documentation("Should processing times be shown")
             .add()
             .build();
-
-    @Nonnull
-    public static ComponentType<EntityStore, EyeSpyComponent> getComponentType() {
-        return EyeSpy.eyeSpyComponentType;
-    }
 
     private AnchorBuilder position = EyeSpy.DEFAULT_HUD_POSITION;
     private LayoutMode layoutMode = LayoutMode.LEFT;
@@ -99,8 +94,8 @@ public class EyeSpyComponent implements Component<EntityStore>, EyeSpyConfig {
 
     @NullableDecl
     @Override
-    public EyeSpyComponent clone() {
-        EyeSpyComponent comp = new EyeSpyComponent();
+    public EyeSpyPlayerData clone() {
+        EyeSpyPlayerData comp = new EyeSpyPlayerData();
         comp.position(this.position);
         comp.layoutMode(this.layoutMode);
         comp.visible(this.visible);

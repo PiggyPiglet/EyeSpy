@@ -15,9 +15,10 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.jarhax.eyespy.EyeSpy;
 import com.jarhax.eyespy.api.hud.LayoutMode;
 import com.jarhax.eyespy.api.info.AnchorBuilder;
-import com.jarhax.eyespy.impl.component.EyeSpyComponent;
+import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -33,7 +34,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
     @Override
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder uiCommandBuilder, @Nonnull UIEventBuilder uiEventBuilder, @Nonnull Store<EntityStore> store) {
         uiCommandBuilder.append("EyeSpy/Pages/Config.ui");
-        EyeSpyComponent eyeSpyComponent = store.ensureAndGetComponent(ref, EyeSpyComponent.getComponentType());
+        EyeSpyPlayerData eyeSpyComponent = EyeSpy.getSaveData(store, ref);
 
         uiCommandBuilder.set("#Visible #CheckBox.Value", eyeSpyComponent.visible());
         uiCommandBuilder.set("#ShowContainers #CheckBox.Value", eyeSpyComponent.showContainers());
@@ -71,7 +72,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
         super.handleDataEvent(ref, store, data);
         System.out.println(data);
 
-        EyeSpyComponent eyeSpyComponent = store.ensureAndGetComponent(ref, EyeSpyComponent.getComponentType());
+        EyeSpyPlayerData eyeSpyComponent = EyeSpy.getSaveData(store, ref);
         eyeSpyComponent.visible(data.visible);
         eyeSpyComponent.showContainers(data.showContainers);
         eyeSpyComponent.showProcessingTimes(data.showProcessingTimes);

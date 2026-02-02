@@ -9,7 +9,8 @@ import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.jarhax.eyespy.impl.component.EyeSpyComponent;
+import com.jarhax.eyespy.EyeSpy;
+import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import com.jarhax.eyespy.impl.hud.EyeSpyHud;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
@@ -29,7 +30,7 @@ public class MultiHudProvider implements HudProvider {
         if (player == null || playerRef == null) {
             return;
         }
-        EyeSpyComponent eyeSpyComponent = holder.ensureAndGetComponent(EyeSpyComponent.getComponentType());
+        EyeSpyPlayerData eyeSpyComponent = EyeSpy.getSaveData(holder);
         boolean canShow = eyeSpyComponent.visible() && (eyeSpyComponent.showInBackground() || (player.getWindowManager().getWindows().isEmpty() && player.getPageManager().getCustomPage() == null));
 
         if (canShow) {

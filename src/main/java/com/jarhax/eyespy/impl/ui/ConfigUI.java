@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.jarhax.eyespy.api.hud.LayoutMode;
+import com.jarhax.eyespy.impl.hud.LayoutMode;
 import com.jarhax.eyespy.api.info.AnchorBuilder;
 import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -112,14 +112,12 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("Data{");
-            sb.append("visible=").append(visible);
-            sb.append(", showContainers=").append(showContainers);
-            sb.append(", showProcessingTimes=").append(showProcessingTimes);
-            sb.append(", showInBackground=").append(showInBackground);
-            sb.append(", position='").append(position).append('\'');
-            sb.append('}');
-            return sb.toString();
+            return "Data{" + "visible=" + visible +
+                   ", showContainers=" + showContainers +
+                   ", showProcessingTimes=" + showProcessingTimes +
+                   ", showInBackground=" + showInBackground +
+                   ", position='" + position + '\'' +
+                   '}';
         }
     }
 
@@ -166,12 +164,10 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("HudPosition{");
-            sb.append("name='").append(name).append('\'');
-            sb.append(", builder=").append(builder);
-            sb.append(", mode=").append(mode);
-            sb.append('}');
-            return sb.toString();
+            return "HudPosition{" + "name='" + name + '\'' +
+                   ", builder=" + builder +
+                   ", mode=" + mode +
+                   '}';
         }
     }
 }

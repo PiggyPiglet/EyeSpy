@@ -1,4 +1,4 @@
-package com.jarhax.eyespy.api.hud;
+package com.jarhax.eyespy.impl.hud;
 
 
 import com.hypixel.hytale.codec.Codec;

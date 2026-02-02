@@ -3,7 +3,7 @@ package com.jarhax.eyespy;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.jarhax.eyespy.api.hud.LayoutMode;
+import com.jarhax.eyespy.impl.hud.LayoutMode;
 import com.jarhax.eyespy.impl.command.ConfigCommand;
 import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import com.jarhax.eyespy.impl.hud.PlayerTickSystem;

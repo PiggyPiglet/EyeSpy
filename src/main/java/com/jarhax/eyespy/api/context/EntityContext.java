@@ -5,13 +5,9 @@ import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.jarhax.eyespy.api.EyeSpyConfig;
@@ -22,8 +18,8 @@ public class EntityContext extends Context {
 
     private final Ref<EntityStore> entity;
 
-    public EntityContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config, Ref<EntityStore> entity) {
-        super(delta, index, archetypeChunk, store, commandBuffer, observer, chunk, config);
+    public EntityContext(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, EyeSpyConfig config, Ref<EntityStore> entity) {
+        super(delta, index, archetypeChunk, store, commandBuffer, observer, config);
         this.entity = entity;
     }
 
@@ -33,31 +29,19 @@ public class EntityContext extends Context {
 
     @Nullable
     public static EntityContext create(PlayerRef player, float dt, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, EyeSpyConfig config) {
-        Ref<EntityStore> playerRef = player.getReference();
-        if (playerRef == null) {
-            return null;
-        }
-        Store<EntityStore> playerStore = playerRef.getStore();
-        World world = store.getExternalData().getWorld();
-        final Ref<EntityStore> targetEntity = TargetUtil.getTargetEntity(archetypeChunk.getReferenceTo(index), commandBuffer);
-        TransformComponent transform = playerStore.getComponent(playerRef, TransformComponent.getComponentType());
-
-        if (transform == null) {
-            return null;
-        }
-        Vector3d position = transform.getPosition();
-
-        if (targetEntity != null && store.getComponent(targetEntity, ModelComponent.getComponentType()) instanceof ModelComponent mc) {
-            if (mc.getModel().equals(PathPlugin.get().getPathMarkerModel())) {
-                return null;
+        final Ref<EntityStore> playerRef = player.getReference();
+        if (playerRef != null) {
+            final Store<EntityStore> playerStore = playerRef.getStore();
+            final Ref<EntityStore> targetEntity = TargetUtil.getTargetEntity(archetypeChunk.getReferenceTo(index), commandBuffer);
+            final TransformComponent transform = playerStore.getComponent(playerRef, TransformComponent.getComponentType());
+            if (transform != null && canDisplayEntity(store, targetEntity)) {
+                return new EntityContext(dt, index, archetypeChunk, store, commandBuffer, player, config, targetEntity);
             }
-            int x = (int) Math.floor(position.x);
-            int z = (int) Math.floor(position.z);
-            long chunkIndex = ChunkUtil.indexChunkFromBlock(x, z);
-            WorldChunk chunk = world.getChunkIfLoaded(chunkIndex);
-            return new EntityContext(dt, index, archetypeChunk, store, commandBuffer, player, chunk, config, targetEntity);
         }
-
         return null;
+    }
+
+    private static boolean canDisplayEntity(Store<EntityStore> store, Ref<EntityStore> target) {
+        return target != null && store.getComponent(target, ModelComponent.getComponentType()) instanceof ModelComponent mc && !mc.getModel().equals(PathPlugin.get().getPathMarkerModel());
     }
 }

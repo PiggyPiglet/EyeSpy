@@ -4,7 +4,6 @@ import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.jarhax.eyespy.api.EyeSpyConfig;
 
@@ -17,17 +16,15 @@ public class Context {
     private final CommandBuffer<EntityStore> commandBuffer;
 
     private final PlayerRef observer;
-    private final WorldChunk chunk;
     private final EyeSpyConfig config;
 
-    public Context(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config) {
+    public Context(float delta, int index, ArchetypeChunk<EntityStore> archetypeChunk, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, EyeSpyConfig config) {
         this.delta = delta;
         this.index = index;
         this.archetypeChunk = archetypeChunk;
         this.store = store;
         this.commandBuffer = commandBuffer;
         this.observer = observer;
-        this.chunk = chunk;
         this.config = config;
     }
 
@@ -57,10 +54,6 @@ public class Context {
 
     public PlayerRef observer() {
         return this.observer;
-    }
-
-    public WorldChunk getChunk() {
-        return chunk;
     }
 
     public EyeSpyConfig getConfig() {

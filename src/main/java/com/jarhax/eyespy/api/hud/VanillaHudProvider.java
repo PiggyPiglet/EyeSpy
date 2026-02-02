@@ -31,7 +31,7 @@ public class VanillaHudProvider implements HudProvider {
         if (player == null || playerRef == null) {
             return;
         }
-        EyeSpyPlayerData eyeSpyComponent = EyeSpy.getSaveData(holder);
+        EyeSpyPlayerData eyeSpyComponent = EyeSpyPlayerData.getSaveData(holder);
         boolean canShow = eyeSpyComponent.visible() && (eyeSpyComponent.showInBackground() || (player.getWindowManager().getWindows().isEmpty() && player.getPageManager().getCustomPage() == null));
 
         if (canShow) {

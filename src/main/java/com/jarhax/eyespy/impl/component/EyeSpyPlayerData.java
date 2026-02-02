@@ -4,7 +4,11 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Holder;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.plugin.PluginBase;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.jarhax.eyespy.EyeSpy;
 import com.jarhax.eyespy.api.EyeSpyConfig;
@@ -36,6 +40,9 @@ public class EyeSpyPlayerData implements Component<EntityStore>, EyeSpyConfig {
             .documentation("Should processing times be shown")
             .add()
             .build();
+
+
+    private static ComponentType<EntityStore, EyeSpyPlayerData> saveDataComponentType;
 
     private AnchorBuilder position = EyeSpy.DEFAULT_HUD_POSITION;
     private LayoutMode layoutMode = LayoutMode.LEFT;
@@ -103,5 +110,20 @@ public class EyeSpyPlayerData implements Component<EntityStore>, EyeSpyConfig {
         comp.showContainers(this.showContainers);
         comp.showProcessingTimes(this.showProcessingTimes);
         return comp;
+    }
+
+    public static void init(PluginBase plugin) {
+        if (saveDataComponentType != null) {
+            throw new IllegalStateException("EyeSpy player save data component has already been initialized!");
+        }
+        saveDataComponentType = plugin.getEntityStoreRegistry().registerComponent(EyeSpyPlayerData.class, "EyeSpy", EyeSpyPlayerData.CODEC);
+    }
+
+    public static EyeSpyPlayerData getSaveData(Holder<EntityStore> holder) {
+        return holder.ensureAndGetComponent(saveDataComponentType);
+    }
+
+    public static EyeSpyPlayerData getSaveData(ComponentAccessor<EntityStore> buffer, Ref<EntityStore> ref) {
+        return buffer.ensureAndGetComponent(ref, saveDataComponentType);
     }
 }

@@ -39,8 +39,6 @@ public class EyeSpy extends JavaPlugin {
 
     public static HudProvider provider = new VanillaHudProvider();
 
-    private static ComponentType<EntityStore, EyeSpyPlayerData> saveDataComponentType;
-
     public EyeSpy(@Nonnull JavaPluginInit init) {
         super(init);
     }
@@ -50,7 +48,7 @@ public class EyeSpy extends JavaPlugin {
         super.setup();
         this.getEntityStoreRegistry().registerSystem(new PlayerTickSystem());
         this.getCommandRegistry().registerCommand(new ConfigCommand());
-        saveDataComponentType = this.getEntityStoreRegistry().registerComponent(EyeSpyPlayerData.class, "EyeSpy", EyeSpyPlayerData.CODEC);
+        EyeSpyPlayerData.init(this);
     }
 
     @Override
@@ -74,13 +72,5 @@ public class EyeSpy extends JavaPlugin {
         final long end = System.nanoTime();
         LOGGER.atInfo().log("Determined owners for %d blocks. Took %fms", OWNERSHIP.size(), (end - start) / 1_000_000f);
         Reflect.UICommandBuilder_.CODEC_MAP.get().put(LayoutMode.class, LayoutMode.CODEC);
-    }
-
-    public static EyeSpyPlayerData getSaveData(Holder<EntityStore> holder) {
-        return holder.ensureAndGetComponent(saveDataComponentType);
-    }
-
-    public static EyeSpyPlayerData getSaveData(ComponentAccessor<EntityStore> buffer, Ref<EntityStore> ref) {
-        return buffer.ensureAndGetComponent(ref, saveDataComponentType);
     }
 }

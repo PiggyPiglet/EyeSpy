@@ -17,6 +17,7 @@ import com.jarhax.eyespy.api.info.AnchorBuilder;
 import com.jarhax.eyespy.api.info.InfoBuilder;
 import com.jarhax.eyespy.api.info.InfoProvider;
 import com.jarhax.eyespy.api.info.InfoValue;
+import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import com.jarhax.eyespy.impl.info.VanillaBlockInfoProvider;
 import com.jarhax.eyespy.impl.info.VanillaEntityInfoProvider;
 
@@ -58,7 +59,7 @@ public class EyeSpyHud extends CustomUIHud {
         PlayerRef playerRef = archetypeChunk.getComponent(index, PlayerRef.getComponentType());
         World world = store.getExternalData().getWorld();
         Ref<EntityStore> referenceTo = archetypeChunk.getReferenceTo(index);
-        EyeSpyConfig config = EyeSpy.getSaveData(commandBuffer, referenceTo);
+        EyeSpyConfig config = EyeSpyPlayerData.getSaveData(commandBuffer, referenceTo);
         if (playerRef != null && world != null) {
             this.config = config;
             this.entityContext = EntityContext.create(playerRef, dt, index, archetypeChunk, store, commandBuffer, config);

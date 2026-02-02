@@ -34,7 +34,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
     @Override
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder uiCommandBuilder, @Nonnull UIEventBuilder uiEventBuilder, @Nonnull Store<EntityStore> store) {
         uiCommandBuilder.append("EyeSpy/Pages/Config.ui");
-        EyeSpyPlayerData eyeSpyComponent = EyeSpy.getSaveData(store, ref);
+        EyeSpyPlayerData eyeSpyComponent = EyeSpyPlayerData.getSaveData(store, ref);
 
         uiCommandBuilder.set("#Visible #CheckBox.Value", eyeSpyComponent.visible());
         uiCommandBuilder.set("#ShowContainers #CheckBox.Value", eyeSpyComponent.showContainers());
@@ -72,7 +72,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
         super.handleDataEvent(ref, store, data);
         System.out.println(data);
 
-        EyeSpyPlayerData eyeSpyComponent = EyeSpy.getSaveData(store, ref);
+        EyeSpyPlayerData eyeSpyComponent = EyeSpyPlayerData.getSaveData(store, ref);
         eyeSpyComponent.visible(data.visible);
         eyeSpyComponent.showContainers(data.showContainers);
         eyeSpyComponent.showProcessingTimes(data.showProcessingTimes);

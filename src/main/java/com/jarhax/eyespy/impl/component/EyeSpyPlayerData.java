@@ -10,13 +10,10 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.plugin.PluginBase;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.jarhax.eyespy.EyeSpy;
 import com.jarhax.eyespy.api.EyeSpyConfig;
 import com.jarhax.eyespy.api.hud.LayoutMode;
 import com.jarhax.eyespy.api.info.AnchorBuilder;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
-
-import javax.annotation.Nonnull;
 
 public class EyeSpyPlayerData implements Component<EntityStore>, EyeSpyConfig {
 
@@ -44,7 +41,7 @@ public class EyeSpyPlayerData implements Component<EntityStore>, EyeSpyConfig {
 
     private static ComponentType<EntityStore, EyeSpyPlayerData> saveDataComponentType;
 
-    private AnchorBuilder position = EyeSpy.DEFAULT_HUD_POSITION;
+    private AnchorBuilder position = new AnchorBuilder().setLeft(20).setTop(20);
     private LayoutMode layoutMode = LayoutMode.LEFT;
     private boolean visible = true;
     private boolean showInBackground = true;

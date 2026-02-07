@@ -12,10 +12,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.jarhax.eyespy.api.EyeSpyConfig;
 import com.jarhax.eyespy.api.context.BlockContext;
 import com.jarhax.eyespy.api.context.EntityContext;
-import com.jarhax.eyespy.api.info.AnchorBuilder;
 import com.jarhax.eyespy.api.info.InfoBuilder;
 import com.jarhax.eyespy.api.info.InfoProvider;
-import com.jarhax.eyespy.api.info.InfoValue;
+import com.jarhax.eyespy.api.ui.Anchor;
 import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import com.jarhax.eyespy.impl.info.VanillaBlockInfoProvider;
 import com.jarhax.eyespy.impl.info.VanillaEntityInfoProvider;
@@ -82,15 +81,10 @@ public class EyeSpyHud extends CustomUIHud {
     @Override
     protected void build(@Nonnull UICommandBuilder ui) {
         if (this.info != null && this.info.canDisplay() && this.config != null) {
+            final Anchor anchor = config.position().clone();
             ui.append("EyeSpy/Hud/EyeSpy.ui");
-            AnchorBuilder anchor = this.config.position().clone();
-            this.info.values()
-                    .filter(infoValue -> infoValue != InfoValue.EMPTY)
-                    .forEach(infoValue -> {
-                        infoValue.build(ui, anchor, "#Info");
-                    });
-            this.info.getIcon().build(ui, anchor, "#IconContainer");
-            ui.setObject("#EyeSpyHud.LayoutMode", this.config.layoutMode());
+            this.info.build(anchor, ui);
+            ui.setObject("#EyeSpyHud.LayoutMode", config.layoutMode());
             ui.setObject("#EyeSpyHud.Anchor", anchor.build());
         }
         if (this.entityContext != null) {

@@ -7,6 +7,7 @@ eyespy.progress=Progress: {progress}%
 eyespy.state=Stage: {current}/{max}
 eyespy.timer=Timer: {time}
 eyespy.cooldown=Cooldown: {time}
+eyespy.health=Health: {current}/{max}
 eyespy.enabled=Enabled
 eyespy.disabled=Disabled
 eyespy.powered=Powered

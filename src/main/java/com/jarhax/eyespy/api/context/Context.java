@@ -3,6 +3,7 @@ package com.jarhax.eyespy.api.context;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.jarhax.eyespy.api.EyeSpyConfig;
 
@@ -43,6 +44,10 @@ public class Context {
 
     public PlayerRef observer() {
         return this.observer;
+    }
+
+    public World world() {
+        return this.getStore().getExternalData().getWorld();
     }
 
     public EyeSpyConfig getConfig() {

@@ -2,7 +2,11 @@ package com.jarhax.eyespy.api;
 
 import com.hypixel.hytale.server.core.Message;
 
+import java.text.DecimalFormat;
+
 public class MessageHelpers {
+
+    public static final DecimalFormat ROUNDED_1 = new DecimalFormat("#.#");
 
     public static Message tier(int tier) {
         return Message.translation("server.eyespy.tier").param("tier", tier);
@@ -30,5 +34,9 @@ public class MessageHelpers {
 
     public static Message stage(int current, int max) {
         return Message.translation("server.eyespy.stage").param("current", current).param("max", max);
+    }
+
+    public static Message health(float current, float max) {
+        return Message.translation("server.eyespy.health").param("current", ROUNDED_1.format(current)).param("max", ROUNDED_1.format(max));
     }
 }

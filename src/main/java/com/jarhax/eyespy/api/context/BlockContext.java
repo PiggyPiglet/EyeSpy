@@ -2,6 +2,8 @@ package com.jarhax.eyespy.api.context;
 
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
@@ -12,11 +14,13 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.meta.BlockState;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.jarhax.eyespy.api.EyeSpyConfig;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlockContext extends Context {
@@ -24,37 +28,53 @@ public class BlockContext extends Context {
     private final WorldChunk chunk;
     private final BlockType block;
     private final BlockState state;
+    private final Ref<ChunkStore> ref;
     private final Vector3i targetPos;
-    private final Vector3i offsetPos;
+    private final Vector3i blockPos;
 
-    public BlockContext(float delta, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config, Vector3i targetPos, Vector3i offsetPos, BlockType block, BlockState state) {
+    public BlockContext(float delta, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, WorldChunk chunk, EyeSpyConfig config, Vector3i targetPos, Vector3i offsetPos, BlockType block, BlockState state, Ref<ChunkStore> blockRef) {
         super(delta, store, commandBuffer, observer, config);
         this.chunk = chunk;
         this.targetPos = targetPos;
-        this.offsetPos = offsetPos;
+        this.blockPos = offsetPos;
         this.block = block;
         this.state = state;
+        this.ref = blockRef;
     }
 
-    public WorldChunk getChunk() {
+    public WorldChunk chunk() {
         return chunk;
     }
 
-    public BlockType getBlock() {
+    public BlockType blockType() {
         return block;
     }
 
     @Nullable
-    public BlockState getState() {
+    public BlockState blockState() {
         return state;
     }
 
-    public Vector3i getTargetPos() {
+    public Vector3i blockPos() {
+        return blockPos;
+    }
+
+    public Vector3i targetPos() {
         return targetPos;
     }
 
-    public Vector3i getOffsetPos() {
-        return offsetPos;
+    @Nullable
+    public Ref<ChunkStore> ref() {
+        return this.ref;
+    }
+
+    @Nullable
+    public <T extends Component<ChunkStore>> T component(@Nonnull ComponentType<ChunkStore, T> componentType) {
+        return this.isRefValid() ? this.world().getChunkStore().getStore().getComponent(this.ref, componentType) : null;
+    }
+
+    public boolean isRefValid() {
+        return this.ref != null && this.ref.isValid();
     }
 
     @Nullable
@@ -75,7 +95,8 @@ public class BlockContext extends Context {
                     if (rootChunk != null) {
                         final BlockType block = rootChunk.getBlockType(rootPos.x, rootPos.y, rootPos.z);
                         final BlockState state = rootChunk.getState(rootPos.x, rootPos.y, rootPos.z);
-                        return new BlockContext(dt, store, commandBuffer, player, rootChunk, config, targetBlockPos, rootPos, block, state);
+                        final Ref<ChunkStore> blockRef = rootChunk.getBlockComponentEntity(rootPos.x, rootPos.y, rootPos.z);
+                        return new BlockContext(dt, store, commandBuffer, player, rootChunk, config, targetBlockPos, rootPos, block, state, blockRef);
                     }
                 }
             }

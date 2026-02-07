@@ -1,16 +1,15 @@
-package com.jarhax.eyespy.api.info;
+package com.jarhax.eyespy.api.ui;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.Value;
 
 import java.util.Objects;
 
-public class AnchorBuilder {
+public class Anchor {
 
-    public static final BuilderCodec<AnchorBuilder> CODEC = BuilderCodec.builder(AnchorBuilder.class, AnchorBuilder::new)
+    public static final BuilderCodec<Anchor> CODEC = BuilderCodec.builder(Anchor.class, Anchor::new)
             .append(new KeyedCodec<>("Left", Codec.INTEGER), (p, t) -> p.left = t, p -> p.left)
             .add()
             .append(new KeyedCodec<>("Right", Codec.INTEGER), (p, t) -> p.right = t, p -> p.right)
@@ -47,7 +46,7 @@ public class AnchorBuilder {
     private Integer minWidth = null;
     private Integer maxWidth = null;
 
-    public AnchorBuilder() {
+    public Anchor() {
     }
 
     public void addHeight(int height) {
@@ -60,57 +59,57 @@ public class AnchorBuilder {
         }
     }
 
-    public AnchorBuilder setLeft(Integer left) {
+    public Anchor setLeft(Integer left) {
         this.left = left;
         return this;
     }
 
-    public AnchorBuilder setRight(Integer right) {
+    public Anchor setRight(Integer right) {
         this.right = right;
         return this;
     }
 
-    public AnchorBuilder setTop(Integer top) {
+    public Anchor setTop(Integer top) {
         this.top = top;
         return this;
     }
 
-    public AnchorBuilder setBottom(Integer bottom) {
+    public Anchor setBottom(Integer bottom) {
         this.bottom = bottom;
         return this;
     }
 
-    public AnchorBuilder setHeight(Integer height) {
+    public Anchor setHeight(Integer height) {
         this.height = height;
         return this;
     }
 
-    public AnchorBuilder setFull(Integer full) {
+    public Anchor setFull(Integer full) {
         this.full = full;
         return this;
     }
 
-    public AnchorBuilder setHorizontal(Integer horizontal) {
+    public Anchor setHorizontal(Integer horizontal) {
         this.horizontal = horizontal;
         return this;
     }
 
-    public AnchorBuilder setVertical(Integer vertical) {
+    public Anchor setVertical(Integer vertical) {
         this.vertical = vertical;
         return this;
     }
 
-    public AnchorBuilder setWidth(Integer width) {
+    public Anchor setWidth(Integer width) {
         this.width = width;
         return this;
     }
 
-    public AnchorBuilder setMinWidth(Integer minWidth) {
+    public Anchor setMinWidth(Integer minWidth) {
         this.minWidth = minWidth;
         return this;
     }
 
-    public AnchorBuilder setMaxWidth(Integer maxWidth) {
+    public Anchor setMaxWidth(Integer maxWidth) {
         this.maxWidth = maxWidth;
         return this;
     }
@@ -159,8 +158,8 @@ public class AnchorBuilder {
         return maxWidth;
     }
 
-    public Anchor build() {
-        Anchor anchor = new Anchor();
+    public com.hypixel.hytale.server.core.ui.Anchor build() {
+        com.hypixel.hytale.server.core.ui.Anchor anchor = new com.hypixel.hytale.server.core.ui.Anchor();
         if (this.left != null) {
             anchor.setLeft(Value.of(this.left));
         }
@@ -212,8 +211,8 @@ public class AnchorBuilder {
     }
 
     @Override
-    public AnchorBuilder clone() {
-        AnchorBuilder anchorBuilder = new AnchorBuilder();
+    public Anchor clone() {
+        Anchor anchorBuilder = new Anchor();
         anchorBuilder.left = this.left;
         anchorBuilder.right = this.right;
         anchorBuilder.top = this.top;
@@ -230,7 +229,7 @@ public class AnchorBuilder {
 
     @Override
     public final boolean equals(Object o) {
-        if (!(o instanceof AnchorBuilder that)) return false;
+        if (!(o instanceof Anchor that)) return false;
 
         return Objects.equals(left, that.left) && Objects.equals(right, that.right) && Objects.equals(top, that.top) && Objects.equals(bottom, that.bottom) && Objects.equals(height, that.height) && Objects.equals(full, that.full) && Objects.equals(horizontal, that.horizontal) && Objects.equals(vertical, that.vertical) && Objects.equals(width, that.width) && Objects.equals(minWidth, that.minWidth) && Objects.equals(maxWidth, that.maxWidth);
     }

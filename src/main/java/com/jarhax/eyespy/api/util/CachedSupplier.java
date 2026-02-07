@@ -1,4 +1,4 @@
-package com.jarhax.eyespy.impl.util;
+package com.jarhax.eyespy.api.util;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -9,7 +9,7 @@ import java.util.function.Supplier;
  *
  * @param <T> The type that is cached by the supplier.
  */
-public class CachedSupplier<T> implements Supplier<T> {
+public final class CachedSupplier<T> implements Supplier<T> {
 
     /**
      * The internal Supplier responsible for producing the cached value.
@@ -27,7 +27,7 @@ public class CachedSupplier<T> implements Supplier<T> {
     @Nullable
     private T cachedValue;
 
-    protected CachedSupplier(Supplier<T> delegate) {
+    private CachedSupplier(Supplier<T> delegate) {
         this.delegate = delegate;
     }
 

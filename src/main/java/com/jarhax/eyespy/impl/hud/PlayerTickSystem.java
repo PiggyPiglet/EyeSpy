@@ -10,6 +10,7 @@ import com.hypixel.hytale.server.core.entity.EntityUtils;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.jarhax.eyespy.impl.hud.provider.HudProvider;
 
 import javax.annotation.Nonnull;
 

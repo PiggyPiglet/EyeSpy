@@ -1,4 +1,4 @@
-package com.jarhax.eyespy.impl.hud;
+package com.jarhax.eyespy.impl.hud.provider;
 
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -6,7 +6,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.plugin.PluginManager;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.jarhax.eyespy.impl.util.CachedSupplier;
+import com.jarhax.eyespy.api.util.CachedSupplier;
 
 import javax.annotation.Nonnull;
 

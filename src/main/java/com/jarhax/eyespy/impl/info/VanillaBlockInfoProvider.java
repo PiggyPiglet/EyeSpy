@@ -11,7 +11,6 @@ import com.hypixel.hytale.server.core.asset.type.item.config.ItemTranslationProp
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.universe.world.meta.state.ItemContainerState;
-import com.jarhax.eyespy.api.MessageHelpers;
 import com.jarhax.eyespy.api.context.BlockContext;
 import com.jarhax.eyespy.api.info.InfoBuilder;
 import com.jarhax.eyespy.api.info.InfoProvider;
@@ -24,16 +23,12 @@ import com.jarhax.eyespy.api.ui.UIElement;
 import com.jarhax.eyespy.api.util.Identifier;
 import com.jarhax.eyespy.impl.util.Owners;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class VanillaBlockInfoProvider implements InfoProvider<BlockContext> {
-
-    private static final Color INFO_COLOR = new Color(170, 170, 170);
-    private static final Color OWNER_COLOR = new Color(85, 85, 255);
 
     public static final Identifier ICON = Identifier.EYE_SPY.of("Icon");
     public static final Identifier NAME = Identifier.EYE_SPY.of("Name");
@@ -46,7 +41,7 @@ public class VanillaBlockInfoProvider implements InfoProvider<BlockContext> {
     public static final Identifier OWNER = Identifier.EYE_SPY.of("Owner");
 
     @Override
-    public void updateDescription(BlockContext context, InfoBuilder info) {
+    public void provideInfo(BlockContext context, InfoBuilder info) {
         if (!context.blockType().getId().equals("Empty")) {
             // Block Name
             info.header(new Label(NAME, getDisplayName(context.blockType()), 24));
@@ -70,15 +65,15 @@ public class VanillaBlockInfoProvider implements InfoProvider<BlockContext> {
             // Bench Info
             if (context.blockState() instanceof BenchState bench) {
                 final List<UIElement> values = new ArrayList<>();
-                values.add(new Label(BENCH_TIER, MessageHelpers.tier(bench.getTierLevel()).color(INFO_COLOR)));
-                if (bench instanceof ProcessingBenchState processor && context.getConfig().showProcessingTimes() && processor.isActive() && processor.getRecipe() != null && !Float.isNaN(processor.getInputProgress()) && !Float.isNaN(processor.getRecipe().getTimeSeconds())) {
+                values.add(new Label(BENCH_TIER, Message.translation("server.eyespy.tier").param("tier", bench.getTierLevel()).color(INFO_COLOR)));
+                if (bench instanceof ProcessingBenchState processor && context.config().showProcessingTimes() && processor.isActive() && processor.getRecipe() != null && !Float.isNaN(processor.getInputProgress()) && !Float.isNaN(processor.getRecipe().getTimeSeconds())) {
                     values.add(new ProgressBar(BENCH_PROGRESS, processor.getInputProgress() / processor.getRecipe().getTimeSeconds()));
                 }
                 info.body(new Group(BENCH, values));
             }
 
             // Container Info
-            if (context.blockState() instanceof ItemContainerState containerState && context.getConfig().showContainers()) {
+            if (context.blockState() instanceof ItemContainerState containerState && context.config().showContainers()) {
                 final ItemContainer container = containerState.getItemContainer();
                 final Map<String, Integer> stackCounts = new HashMap<>();
                 for (short slot = 0; slot < container.getCapacity(); slot++) {

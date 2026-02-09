@@ -11,14 +11,17 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.plugin.PluginBase;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.jarhax.eyespy.api.EyeSpyConfig;
-import com.jarhax.eyespy.api.ui.Anchor;
+import com.jarhax.eyespy.api.ui.AnchorProperties;
 import com.jarhax.eyespy.api.ui.LayoutMode;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
+/**
+ * This component holds player save data that is unique to each player.
+ */
 public class EyeSpyPlayerData implements Component<EntityStore>, EyeSpyConfig {
 
     public static final BuilderCodec<EyeSpyPlayerData> CODEC = BuilderCodec.builder(EyeSpyPlayerData.class, EyeSpyPlayerData::new)
-            .append(new KeyedCodec<>("Position", Anchor.CODEC), EyeSpyPlayerData::position, EyeSpyPlayerData::position)
+            .append(new KeyedCodec<>("Position", AnchorProperties.CODEC), EyeSpyPlayerData::position, EyeSpyPlayerData::position)
             .documentation("The position of the hud on the screen")
             .add()
             .append(new KeyedCodec<>("LayoutMode", LayoutMode.CODEC), EyeSpyPlayerData::layoutMode, EyeSpyPlayerData::layoutMode)
@@ -41,18 +44,18 @@ public class EyeSpyPlayerData implements Component<EntityStore>, EyeSpyConfig {
 
     private static ComponentType<EntityStore, EyeSpyPlayerData> saveDataComponentType;
 
-    private Anchor position = new Anchor().setLeft(20).setTop(20);
+    private AnchorProperties position = new AnchorProperties().setLeft(20).setTop(20);
     private LayoutMode layoutMode = LayoutMode.LEFT;
     private boolean visible = true;
     private boolean showInBackground = true;
     private boolean showContainers = true;
     private boolean showProcessingTimes = true;
 
-    public Anchor position() {
+    public AnchorProperties position() {
         return position;
     }
 
-    public void position(Anchor position) {
+    public void position(AnchorProperties position) {
         this.position = position;
     }
 

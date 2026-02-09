@@ -22,7 +22,7 @@ public class MultiHudProvider implements HudProvider {
     public static final String EYE_SPY_IDENTIFIER = "EyeSpy_HUD";
 
     @Override
-    public void showHud(float dt, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> commandBuffer) {
+    public void showHud(float delta, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> entityBuffer) {
         final Holder<EntityStore> holder = EntityUtils.toHolder(index, archetypeChunk);
         final Player player = holder.getComponent(Player.getComponentType());
         final PlayerRef playerRef = holder.getComponent(PlayerRef.getComponentType());
@@ -36,22 +36,22 @@ public class MultiHudProvider implements HudProvider {
             if (!huds.containsKey(playerRef)) {
                 EyeSpyHud value = new EyeSpyHud(playerRef);
                 huds.put(playerRef, value);
-                value.updateHud(dt, index, archetypeChunk, store, commandBuffer);
+                value.updateHud(delta, index, archetypeChunk, store, entityBuffer);
                 MultipleHUD.getInstance().setCustomHud(player, playerRef, EYE_SPY_IDENTIFIER, value);
             } else {
                 EyeSpyHud value = huds.get(playerRef);
-                value.updateHud(dt, index, archetypeChunk, store, commandBuffer);
+                value.updateHud(delta, index, archetypeChunk, store, entityBuffer);
                 MultipleHUD.getInstance().setCustomHud(player, playerRef, EYE_SPY_IDENTIFIER, value);
             }
         } else {
             if (huds.containsKey(playerRef)) {
-                this.hideHud(dt, index, archetypeChunk, store, commandBuffer);
+                this.hideHud(delta, index, archetypeChunk, store, entityBuffer);
             }
         }
     }
 
     @Override
-    public void hideHud(float dt, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> commandBuffer) {
+    public void hideHud(float delta, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> entityBuffer) {
         final Holder<EntityStore> holder = EntityUtils.toHolder(index, archetypeChunk);
         final Player player = holder.getComponent(Player.getComponentType());
         final PlayerRef playerRef = holder.getComponent(PlayerRef.getComponentType());
@@ -63,5 +63,10 @@ public class MultiHudProvider implements HudProvider {
             huds.remove(playerRef);
         }
 
+    }
+
+    @Override
+    public String name() {
+        return "Buuz135 MultipleHUD";
     }
 }

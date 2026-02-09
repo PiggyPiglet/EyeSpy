@@ -23,6 +23,9 @@ import com.jarhax.eyespy.api.EyeSpyConfig;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * Holds context about the game, the observer, and the block that is being observed.
+ */
 public class BlockContext extends Context {
 
     private final WorldChunk chunk;
@@ -42,39 +45,72 @@ public class BlockContext extends Context {
         this.ref = blockRef;
     }
 
+    /**
+     * Gets the chunk that the base block is within.
+     *
+     * @return The chunk that the base block is within.
+     */
     public WorldChunk chunk() {
         return chunk;
     }
 
+    /**
+     * Gets the block type of the base block.
+     *
+     * @return The chunk type of the base block.
+     */
     public BlockType blockType() {
         return block;
     }
 
+    /**
+     * Gets the state of the base block if it has one.
+     *
+     * @return The state of the base block or null if it does not have one.
+     */
     @Nullable
     public BlockState blockState() {
         return state;
     }
 
+    /**
+     * Gets a reference for the base block.
+     *
+     * @return The reference for the base block.
+     */
+    @Nullable
+    public Ref<ChunkStore> blockRef() {
+        return this.ref;
+    }
+
+    /**
+     * Gets the position of the base block.
+     *
+     * @return The position of the base block.
+     */
     public Vector3i blockPos() {
         return blockPos;
     }
 
+    /**
+     * Gets the position being observed by the player.
+     *
+     * @return The position being observed by the player.
+     */
     public Vector3i targetPos() {
         return targetPos;
     }
 
-    @Nullable
-    public Ref<ChunkStore> ref() {
-        return this.ref;
-    }
-
+    /**
+     * Gets a component from the base block, if it has one.
+     *
+     * @param componentType The type of component to look for.
+     * @param <T>           The type of component to look for.
+     * @return The component for the base block, or null if it did not have one.
+     */
     @Nullable
     public <T extends Component<ChunkStore>> T component(@Nonnull ComponentType<ChunkStore, T> componentType) {
-        return this.isRefValid() ? this.world().getChunkStore().getStore().getComponent(this.ref, componentType) : null;
-    }
-
-    public boolean isRefValid() {
-        return this.ref != null && this.ref.isValid();
+        return this.blockRef() != null && this.blockRef().isValid() ? this.world().getChunkStore().getStore().getComponent(this.ref, componentType) : null;
     }
 
     @Nullable
@@ -93,9 +129,9 @@ public class BlockContext extends Context {
                     final long rootChunkIndex = ChunkUtil.indexChunkFromBlock(rootPos.x, rootPos.z);
                     final WorldChunk rootChunk = rootChunkIndex == targetChunkIndex ? targetChunk : world.getChunkIfLoaded(rootChunkIndex);
                     if (rootChunk != null) {
+                        final Ref<ChunkStore> blockRef = rootChunk.getBlockComponentEntity(rootPos.x, rootPos.y, rootPos.z);
                         final BlockType block = rootChunk.getBlockType(rootPos.x, rootPos.y, rootPos.z);
                         final BlockState state = rootChunk.getState(rootPos.x, rootPos.y, rootPos.z);
-                        final Ref<ChunkStore> blockRef = rootChunk.getBlockComponentEntity(rootPos.x, rootPos.y, rootPos.z);
                         return new BlockContext(dt, store, commandBuffer, player, rootChunk, config, targetBlockPos, rootPos, block, state, blockRef);
                     }
                 }
@@ -104,7 +140,7 @@ public class BlockContext extends Context {
         return null;
     }
 
-    public static Vector3i resolveBaseBlock(WorldChunk chunk, Vector3i pos) {
+    private static Vector3i resolveBaseBlock(WorldChunk chunk, Vector3i pos) {
         final int filler = chunk.getFiller(pos.x, pos.y, pos.z);
         return filler == 0 ? pos.clone() : new Vector3i(pos.x - FillerBlockUtil.unpackX(filler), pos.y - FillerBlockUtil.unpackY(filler), pos.z - FillerBlockUtil.unpackZ(filler));
     }

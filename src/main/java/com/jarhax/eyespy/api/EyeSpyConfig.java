@@ -1,11 +1,11 @@
 package com.jarhax.eyespy.api;
 
-import com.jarhax.eyespy.api.ui.Anchor;
+import com.jarhax.eyespy.api.ui.AnchorProperties;
 import com.jarhax.eyespy.api.ui.LayoutMode;
 
 public interface EyeSpyConfig {
 
-    Anchor position();
+    AnchorProperties position();
 
     LayoutMode layoutMode();
 

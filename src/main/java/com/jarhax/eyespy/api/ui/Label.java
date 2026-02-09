@@ -55,8 +55,7 @@ public class Label extends UIElement {
     }
 
     @Override
-    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull Anchor anchor, String parent) {
-        System.out.println(this.build());
+    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull AnchorProperties anchor, String parent) {
         super.appendUI(ui, anchor, parent);
         ui.set(parent + " #%s.TextSpans".formatted(this.id.ui()), value);
     }

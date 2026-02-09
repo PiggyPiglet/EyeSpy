@@ -17,22 +17,37 @@ import com.jarhax.eyespy.api.EyeSpyConfig;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * Holds context about the game, the observer, and the entity being observed.
+ */
 public class EntityContext extends Context {
 
-    private final Ref<EntityStore> ref;
+    private final Ref<EntityStore> entityRef;
 
-    public EntityContext(float delta, Store<EntityStore> store, CommandBuffer<EntityStore> commandBuffer, PlayerRef observer, EyeSpyConfig config, Ref<EntityStore> entity) {
-        super(delta, store, commandBuffer, observer, config);
-        this.ref = entity;
+    public EntityContext(float delta, Store<EntityStore> entityStore, CommandBuffer<EntityStore> entityBuffer, PlayerRef observer, EyeSpyConfig config, Ref<EntityStore> entity) {
+        super(delta, entityStore, entityBuffer, observer, config);
+        this.entityRef = entity;
     }
 
-    public Ref<EntityStore> ref() {
-        return ref;
+    /**
+     * Gets a reference to the entity being observed.
+     *
+     * @return The reference to the observed entity.
+     */
+    public Ref<EntityStore> entityRef() {
+        return entityRef;
     }
 
+    /**
+     * Gets a component from the observed entity, if the component is available.
+     *
+     * @param type The type of the component to retrieve.
+     * @param <T>  The type of the component to retrieve.
+     * @return If the entity has the component it will be returned, otherwise it will be null.
+     */
     @Nullable
     public <T extends Component<EntityStore>> T component(@Nonnull ComponentType<EntityStore, T> type) {
-        return this.getStore().getComponent(this.ref(), type);
+        return this.entityStore().getComponent(this.entityRef(), type);
     }
 
     @Nullable

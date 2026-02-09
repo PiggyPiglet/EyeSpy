@@ -18,12 +18,16 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This HUD provider works with the vanilla Hytale HUD system. This system works well for EyeSpy, but it does not
+ * support multiple HUDs. This is a limitation of the vanilla game.
+ */
 public class VanillaHudProvider implements HudProvider {
 
     private final Map<PlayerRef, EyeSpyHud> huds = new HashMap<>();
 
     @Override
-    public void showHud(float dt, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> commandBuffer) {
+    public void showHud(float delta, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> entityBuffer) {
         final Holder<EntityStore> holder = EntityUtils.toHolder(index, archetypeChunk);
         final Player player = holder.getComponent(Player.getComponentType());
         final PlayerRef playerRef = holder.getComponent(PlayerRef.getComponentType());
@@ -37,23 +41,25 @@ public class VanillaHudProvider implements HudProvider {
             if (!huds.containsKey(playerRef)) {
                 EyeSpyHud value = new EyeSpyHud(playerRef);
                 huds.put(playerRef, value);
-                value.updateHud(dt, index, archetypeChunk, store, commandBuffer);
+                value.updateHud(delta, index, archetypeChunk, store, entityBuffer);
                 player.getHudManager().setCustomHud(playerRef, value);
-            } else {
+            }
+            else {
                 EyeSpyHud customUIHud = huds.get(playerRef);
-                customUIHud.updateHud(dt, index, archetypeChunk, store, commandBuffer);
+                customUIHud.updateHud(delta, index, archetypeChunk, store, entityBuffer);
                 customUIHud.show();
             }
-        } else {
+        }
+        else {
             if (huds.containsKey(playerRef)) {
-                this.hideHud(dt, index, archetypeChunk, store, commandBuffer);
+                this.hideHud(delta, index, archetypeChunk, store, entityBuffer);
             }
         }
 
     }
 
     @Override
-    public void hideHud(float dt, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> commandBuffer) {
+    public void hideHud(float delta, int index, @NonNullDecl ArchetypeChunk<EntityStore> archetypeChunk, @NonNullDecl Store<EntityStore> store, @NonNullDecl CommandBuffer<EntityStore> entityBuffer) {
         final Holder<EntityStore> holder = EntityUtils.toHolder(index, archetypeChunk);
         final Player player = holder.getComponent(Player.getComponentType());
         final PlayerRef playerRef = holder.getComponent(PlayerRef.getComponentType());
@@ -66,5 +72,10 @@ public class VanillaHudProvider implements HudProvider {
             playerRef.getPacketHandler().writeNoCache(new CustomHud(true, new CustomUICommand[0]));
             huds.remove(playerRef);
         }
+    }
+
+    @Override
+    public String name() {
+        return "EyeSpy Vanilla";
     }
 }

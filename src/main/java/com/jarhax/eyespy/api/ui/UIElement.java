@@ -31,7 +31,7 @@ public abstract class UIElement {
      * @param anchor The anchor for the EyeSpy HUD itself.
      * @param parent A UI selector for the element that the element should be appended to.
      */
-    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull Anchor anchor, String parent) {
+    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull AnchorProperties anchor, String parent) {
         ui.appendInline(parent, this.build());
         anchor.addHeight(this.height());
     }

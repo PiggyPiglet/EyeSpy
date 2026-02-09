@@ -2,13 +2,16 @@ package com.jarhax.eyespy.api.info;
 
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.jarhax.eyespy.EyeSpy;
-import com.jarhax.eyespy.api.ui.Anchor;
+import com.jarhax.eyespy.api.ui.AnchorProperties;
 import com.jarhax.eyespy.api.ui.UIElement;
 import com.jarhax.eyespy.api.util.Identifier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Builds info for the HUD. Plugins will be given an instance that they can populate using the available methods.
+ */
 public class InfoBuilder {
 
     private UIElement icon = null;
@@ -117,7 +120,7 @@ public class InfoBuilder {
      * @param anchor The position of the HUD.
      * @param ui     Builder for the UI.
      */
-    public void build(Anchor anchor, UICommandBuilder ui) {
+    public void build(AnchorProperties anchor, UICommandBuilder ui) {
         this.header.values().forEach(e -> e.appendUI(ui, anchor, "#Info"));
         this.body.values().forEach(e -> e.appendUI(ui, anchor, "#Info"));
         this.footer.values().forEach(e -> e.appendUI(ui, anchor, "#Info"));

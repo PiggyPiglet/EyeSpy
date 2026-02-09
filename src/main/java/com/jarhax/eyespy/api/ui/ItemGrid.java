@@ -76,7 +76,7 @@ public class ItemGrid extends UIElement {
     }
 
     @Override
-    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull Anchor anchor, String parent) {
+    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull AnchorProperties anchor, String parent) {
         super.appendUI(ui, anchor, parent);
         ui.set("#%s.ItemStacks".formatted(this.id.ui()), stacks);
     }

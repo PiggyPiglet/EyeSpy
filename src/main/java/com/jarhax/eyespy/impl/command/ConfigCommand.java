@@ -15,6 +15,12 @@ import com.jarhax.eyespy.impl.ui.ConfigUI;
 import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The EyeSpy command opens a UI that allows players to configure the EyeSpy mod. Configuration options are unique to
+ * each player, and are not shared.
+ * <p>
+ * To access the UI run /eyespy or /es in game.
+ */
 public class ConfigCommand extends AbstractAsyncCommand {
 
     @Nonnull
@@ -22,7 +28,7 @@ public class ConfigCommand extends AbstractAsyncCommand {
 
     public ConfigCommand() {
         super("eyespy", "server.eyespy.command");
-        addAliases("es");
+        this.addAliases("es");
         this.setPermissionGroup(GameMode.Adventure);
     }
 
@@ -30,23 +36,24 @@ public class ConfigCommand extends AbstractAsyncCommand {
     @Override
     protected CompletableFuture<Void> executeAsync(@Nonnull CommandContext context) {
         if (context.isPlayer()) {
-            Ref<EntityStore> playerRef = context.senderAsPlayerRef();
+            final Ref<EntityStore> playerRef = context.senderAsPlayerRef();
             if (playerRef != null && playerRef.isValid()) {
-                Store<EntityStore> store = playerRef.getStore();
-                World world = store.getExternalData().getWorld();
+                final Store<EntityStore> store = playerRef.getStore();
+                final World world = store.getExternalData().getWorld();
                 return CompletableFuture.runAsync(() -> {
-                    Player playerComponent = store.getComponent(playerRef, Player.getComponentType());
-                    PlayerRef playerRefComponent = store.getComponent(playerRef, PlayerRef.getComponentType());
-
-                    if (playerComponent != null && playerRefComponent != null) {
-                        playerComponent.getPageManager().openCustomPage(playerRef, store, new ConfigUI(playerRefComponent));
+                    final Player sendingPlayer = store.getComponent(playerRef, Player.getComponentType());
+                    final PlayerRef sendingPlayerRef = store.getComponent(playerRef, PlayerRef.getComponentType());
+                    if (sendingPlayer != null && sendingPlayerRef != null) {
+                        sendingPlayer.getPageManager().openCustomPage(playerRef, store, new ConfigUI(sendingPlayerRef));
                     }
                 }, world);
-            } else {
+            }
+            else {
                 context.sendMessage(MESSAGE_COMMANDS_ERRORS_PLAYER_NOT_IN_WORLD);
                 return CompletableFuture.completedFuture(null);
             }
-        } else {
+        }
+        else {
             return CompletableFuture.completedFuture(null);
         }
     }

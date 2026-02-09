@@ -15,7 +15,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.jarhax.eyespy.api.ui.Anchor;
+import com.jarhax.eyespy.api.ui.AnchorProperties;
 import com.jarhax.eyespy.api.ui.LayoutMode;
 import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -41,11 +41,11 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
         uiCommandBuilder.set("#ShowInBackground #CheckBox.Value", eyeSpyComponent.showInBackground());
 
         ObjectArrayList<DropdownEntryInfo> positions = new ObjectArrayList<>();
-        Anchor position = eyeSpyComponent.position();
-        Anchor anchorBuilder = new Anchor();
+        AnchorProperties position = eyeSpyComponent.position();
+        AnchorProperties anchorBuilder = new AnchorProperties();
         for (HudPosition value : HudPosition.values()) {
             positions.add(new DropdownEntryInfo(LocalizableString.fromMessageId("server.eyespy.config.position." + value.name), value.name));
-            anchorBuilder.clear();
+            anchorBuilder.reset();
             value.getBuilder().accept(anchorBuilder);
             if (position.equals(anchorBuilder)) {
                 uiCommandBuilder.set("#Position #Dropdown.Value", value.name);
@@ -69,8 +69,6 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
     @Override
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, @NonNullDecl Data data) {
         super.handleDataEvent(ref, store, data);
-        System.out.println(data);
-
         EyeSpyPlayerData eyeSpyComponent = EyeSpyPlayerData.getSaveData(store, ref);
         eyeSpyComponent.visible(data.visible);
         eyeSpyComponent.showContainers(data.showContainers);
@@ -78,7 +76,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
         eyeSpyComponent.showInBackground(data.showInBackground);
         String hudPosition = data.position;
         if (HudPosition.from(hudPosition) instanceof HudPosition position) {
-            Anchor anchorBuilder = new Anchor();
+            AnchorProperties anchorBuilder = new AnchorProperties();
             position.getBuilder().accept(anchorBuilder);
             eyeSpyComponent.position(anchorBuilder);
             eyeSpyComponent.layoutMode(position.getMode());
@@ -126,15 +124,15 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
         TOP_CENTER("top_center", (builder) -> builder.setHorizontal(0).setTop(50), LayoutMode.CENTER),
         TOP_RIGHT("top_right", (builder) -> builder.setRight(20).setTop(20), LayoutMode.RIGHT),
         BOTTOM_LEFT("bottom_left", (builder) -> builder.setLeft(20).setBottom(20), LayoutMode.LEFT),
-        BOTTOM_CENTER("bottom_center", (builder) -> builder.setHorizontal(20).setBottom(150), LayoutMode.CENTER),
+        BOTTOM_CENTER("bottom_center", (builder) -> builder.setHorizontal(0).setBottom(150), LayoutMode.CENTER),
         BOTTOM_RIGHT("bottom_right", (builder) -> builder.setRight(20).setBottom(150), LayoutMode.RIGHT),
         ;
 
         private final String name;
-        private final Consumer<Anchor> builder;
+        private final Consumer<AnchorProperties> builder;
         private final LayoutMode mode;
 
-        HudPosition(String name, Consumer<Anchor> builder, LayoutMode mode) {
+        HudPosition(String name, Consumer<AnchorProperties> builder, LayoutMode mode) {
             this.name = name;
             this.builder = builder;
             this.mode = mode;
@@ -154,7 +152,7 @@ public class ConfigUI extends InteractiveCustomUIPage<ConfigUI.Data> {
             return name;
         }
 
-        public Consumer<Anchor> getBuilder() {
+        public Consumer<AnchorProperties> getBuilder() {
             return builder;
         }
 

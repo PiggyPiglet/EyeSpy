@@ -59,7 +59,7 @@ public class Group extends UIElement {
     }
 
     @Override
-    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull Anchor anchor, String parent) {
+    public void appendUI(@Nonnull UICommandBuilder ui, @Nonnull AnchorProperties anchor, String parent) {
         super.appendUI(ui, anchor, parent);
         for (UIElement child : this.children) {
             child.appendUI(ui, anchor, "#" + this.id.ui());

@@ -7,7 +7,6 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
 import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
-import com.jarhax.eyespy.api.MessageHelpers;
 import com.jarhax.eyespy.api.context.EntityContext;
 import com.jarhax.eyespy.api.info.InfoBuilder;
 import com.jarhax.eyespy.api.info.InfoProvider;
@@ -15,20 +14,16 @@ import com.jarhax.eyespy.api.ui.Label;
 import com.jarhax.eyespy.api.util.Identifier;
 import com.jarhax.eyespy.impl.util.Owners;
 
-import java.awt.*;
 import java.util.Objects;
 
 public class VanillaEntityInfoProvider implements InfoProvider<EntityContext> {
-
-    private static final Color INFO_COLOR = new Color(170, 170, 170);
-    private static final Color OWNER_COLOR = new Color(85, 85, 255);
 
     public static final Identifier NAME = Identifier.EYE_SPY.of("Name");
     public static final Identifier HEALTH = Identifier.EYE_SPY.of("Health");
     public static final Identifier OWNER = Identifier.EYE_SPY.of("Owner");
 
     @Override
-    public void updateDescription(EntityContext context, InfoBuilder info) {
+    public void provideInfo(EntityContext context, InfoBuilder info) {
         final DisplayNameComponent displayName = context.component(DisplayNameComponent.getComponentType());
         if (displayName != null) {
             info.header(new Label(NAME, displayName.getDisplayName(), 24));
@@ -37,7 +32,7 @@ public class VanillaEntityInfoProvider implements InfoProvider<EntityContext> {
         if (stats != null) {
             final EntityStatValue health = stats.get(EntityStatType.getAssetMap().getIndex("Health"));
             if (health != null) {
-                info.body(new Label(HEALTH, MessageHelpers.health(health.get(), health.getMax())));
+                info.body(new Label(HEALTH, Message.translation("server.eyespy.health").param("current", ROUNDED_1.format(health.get())).param("max", ROUNDED_1.format(health.getMax()))));
             }
         }
         if (context.component(Objects.requireNonNull(NPCEntity.getComponentType())) instanceof NPCEntity entity) {

@@ -19,11 +19,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/**
+ * This class provides information about which pack/plugin added a given piece of a content.
+ */
 public class Owners {
 
     private static final Map<String, PluginIdentifier> BLOCKS = new HashMap<>();
     private static final Map<String, PluginIdentifier> NPCS = new HashMap<>();
 
+    /**
+     * Reloads the ownership cache, adding support for new entries.
+     */
     public static void reload() {
         reloadBlocks();
         reloadNPCS();
@@ -89,11 +95,23 @@ public class Owners {
         EyeSpy.LOGGER.atInfo().log("Determined owners for %d NPCs. Took %fms", NPCS.size(), (end - start) / 1_000_000f);
     }
 
+    /**
+     * Gets the owner for a block if we know it.
+     *
+     * @param blockId The block ID to lookup.
+     * @return The owner of the block, if it is known.
+     */
     @Nullable
     public static PluginIdentifier blockOwner(String blockId) {
         return BLOCKS.get(blockId);
     }
 
+    /**
+     * Gets the owner of an NPC if we know it.
+     *
+     * @param npcId The NPC role ID to lookup.
+     * @return The owner of the NPC, if it is known.
+     */
     @Nullable
     public static PluginIdentifier npcOwner(String npcId) {
         return NPCS.get(npcId);

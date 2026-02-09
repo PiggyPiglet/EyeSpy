@@ -14,7 +14,7 @@ import com.jarhax.eyespy.api.context.BlockContext;
 import com.jarhax.eyespy.api.context.EntityContext;
 import com.jarhax.eyespy.api.info.InfoBuilder;
 import com.jarhax.eyespy.api.info.InfoProvider;
-import com.jarhax.eyespy.api.ui.Anchor;
+import com.jarhax.eyespy.api.ui.AnchorProperties;
 import com.jarhax.eyespy.impl.component.EyeSpyPlayerData;
 import com.jarhax.eyespy.impl.info.VanillaBlockInfoProvider;
 import com.jarhax.eyespy.impl.info.VanillaEntityInfoProvider;
@@ -63,14 +63,14 @@ public class EyeSpyHud extends CustomUIHud {
             this.entityContext = EntityContext.create(playerRef, dt, index, archetypeChunk, store, commandBuffer, config);
             if (this.entityContext != null) {
                 for (InfoProvider<EntityContext> provider : entityInfoProviders) {
-                    provider.updateDescription(this.entityContext, this.info);
+                    provider.provideInfo(this.entityContext, this.info);
                 }
             }
             else {
                 this.blockContext = BlockContext.create(playerRef, dt, index, archetypeChunk, store, commandBuffer, config);
                 if (this.blockContext != null) {
                     for (InfoProvider<BlockContext> provider : blockInfoProviders) {
-                        provider.updateDescription(this.blockContext, this.info);
+                        provider.provideInfo(this.blockContext, this.info);
                     }
                 }
             }
@@ -81,21 +81,11 @@ public class EyeSpyHud extends CustomUIHud {
     @Override
     protected void build(@Nonnull UICommandBuilder ui) {
         if (this.info != null && this.info.canDisplay() && this.config != null) {
-            final Anchor anchor = config.position().clone();
+            final AnchorProperties anchor = config.position().copy();
             ui.append("EyeSpy/Hud/EyeSpy.ui");
             this.info.build(anchor, ui);
-            ui.setObject("#EyeSpyHud.LayoutMode", config.layoutMode());
+            ui.set("#EyeSpyHud.LayoutMode", config.layoutMode().elementName());
             ui.setObject("#EyeSpyHud.Anchor", anchor.build());
-        }
-        if (this.entityContext != null) {
-            for (InfoProvider<EntityContext> provider : entityInfoProviders) {
-                provider.modifyUI(this.entityContext, ui);
-            }
-        }
-        else if (this.blockContext != null) {
-            for (InfoProvider<BlockContext> provider : blockInfoProviders) {
-                provider.modifyUI(this.blockContext, ui);
-            }
         }
     }
 }

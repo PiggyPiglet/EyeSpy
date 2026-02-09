@@ -55,10 +55,10 @@ public class VanillaBlockInfoProvider implements InfoProvider<BlockContext> {
             // Teleporter Info
             if (context.component(Teleporter.getComponentType()) instanceof Teleporter teleporter) {
                 if (teleporter.getOwnedWarp() != null) {
-                    info.body(new Label(TELEPORTER_NAME, Message.raw("Name: " + teleporter.getOwnedWarp())));
+                    info.body(new Label(TELEPORTER_NAME, Message.translation("server.eyespy.name").param("name", teleporter.getOwnedWarp()).color(INFO_COLOR)));
                 }
                 if (teleporter.getWarp() != null) {
-                    info.body(new Label(TELEPORTER_POS, Message.raw("Destination: " + teleporter.getWarp())));
+                    info.body(new Label(TELEPORTER_POS, Message.translation("server.eyespy.destination").param("destination", teleporter.getWarp()).color(INFO_COLOR)));
                 }
             }
 

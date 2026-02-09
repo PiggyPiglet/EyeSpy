@@ -1,4 +1,6 @@
 eyespy.lines.2=\n
+eyespy.name=Name: {name}
+eyespy.destination=Destination: {destination}
 eyespy.tier=Tier: {tier}
 eyespy.level=Level: {level}
 eyespy.capacity=Capacity: {capacity}

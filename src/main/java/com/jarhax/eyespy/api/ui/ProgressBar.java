@@ -45,7 +45,7 @@ public class ProgressBar extends UIElement {
             throw new IllegalStateException("Element '" + id + "' has a value of '" + value + "'. Progress bars display percentages and must be between 0 and 1.");
         }
         // For some reason, the Hytale client will crash if the value is too
-        // precise. So we reduce it to two decimal places of precision.
+        // precise. So we reduce it to three decimal places of precision.
         this.value = Math.round(value * 1000) / 1000f;
         this.width = width;
         this.height = height;
